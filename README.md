@@ -3,7 +3,7 @@
 A personal reading tracker built with vanilla HTML, CSS, and JavaScript. No frameworks — just semantic HTML, modular ES modules, and localStorage for persistence.
 
 > **Theme:** Book & Notes Vault  
-> **Live Demo:** [https://yourusername.github.io/book-vault](https://yourusername.github.io/book-vault)  
+> **Live Demo:** https://kaylain7.github.io/E-library/
 > **Demo Video:** [Unlisted YouTube link — replace me](#)
 
 ---
@@ -137,4 +137,4 @@ To load seed data: **Catalog → Import JSON** → select `seed.json`.
 
 ---
 
-*Built for coursework — COMP Web Development. All code written by the repository owner.*
+

@@ -260,12 +260,14 @@ export function openConfirmDialog(msg) {
 }
 export function setupDialog() {
   const dialog = $('confirm-dialog');
-  const close  = v => { dialog.hidden = true; _resolve?.(v); };
+  if (!dialog) return;
+  dialog.hidden = true;
+  const close = v => { dialog.hidden = true; const r = _resolve; _resolve = null; r?.(v); };
   $('confirm-ok')?.addEventListener('click', () => close(true));
   $('confirm-cancel')?.addEventListener('click', () => close(false));
-  dialog?.addEventListener('click', e => { if (e.target === dialog) close(false); });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !dialog?.hidden) close(false); });
-  dialog?.addEventListener('keydown', e => {
+  dialog.addEventListener('click', e => { if (e.target === dialog) close(false); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !dialog.hidden) close(false); });
+  dialog.addEventListener('keydown', e => {
     if (e.key !== 'Tab' || dialog.hidden) return;
     const btns = [...dialog.querySelectorAll('button')];
     if (e.shiftKey && document.activeElement === btns[0]) { e.preventDefault(); btns.at(-1).focus(); }
