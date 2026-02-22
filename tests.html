@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book &amp; Notes Vault — Test Suite</title>
+  <style>
+    body { font-family: 'Courier New', monospace; max-width: 780px; margin: 2rem auto; padding: 1rem; background: #1a1208; color: #f0e8d4; }
+    h1 { font-size: 1.4rem; margin-bottom: 1.5rem; border-bottom: 2px solid #c87941; padding-bottom: .5rem; }
+    h2 { font-size: 1rem; color: #c87941; margin: 1.5rem 0 .5rem; }
+    .test { display: flex; align-items: baseline; gap: .75rem; padding: .2rem 0; font-size: .82rem; border-bottom: 1px solid #2a2218; }
+    .pass { color: #5aae70; }
+    .fail { color: #d45060; }
+    .icon { flex-shrink: 0; width: 1.2rem; }
+    .label { flex: 1; color: #a0917a; }
+    .summary { margin-top: 1.5rem; padding: 1rem; background: #251d12; border-radius: 4px; border: 1px solid #4a3d28; }
+    .summary b { color: #c87941; }
+    a { color: #c87941; }
+    .note { font-size: .72rem; color: #6b5c40; font-style: italic; }
+  </style>
+</head>
+<body>
+  <h1>📚 Book &amp; Notes Vault — Validator Test Suite</h1>
+  <p class="note">Run this page in a browser. All tests execute inline via ES module import. <a href="index.html">← Back to app</a></p>
+  <div id="output"></div>
+
+  <script type="module">
+    import {
+      validateTitle, validateAuthor, validatePages, validateDate,
+      validateTag, validateISBN, warnDuplicateWords, validateAll,
+      compileRegex, validateRegexPattern, validateImport
+    } from './scripts/validators.js';
+    import { highlight, escapeHtml } from './scripts/search.js';
+
+    const results = [];
+
+    function test(group, label, actual, expected) {
+      const pass = actual === expected;
+      results.push({ group, label, pass, actual, expected });
+    }
+
+    // ─── Group 1: validateTitle ────────────────────────────
+    const G1 = 'validateTitle';
+    test(G1, 'Accepts normal title',               validateTitle('The Name of the Wind').valid, true);
+    test(G1, 'Rejects empty string',               validateTitle('').valid, false);
+    test(G1, 'Rejects leading space',              validateTitle(' Dune').valid, false);
+    test(G1, 'Rejects trailing space',             validateTitle('Dune ').valid, false);
+    test(G1, 'Rejects double space',               validateTitle('Dune  the Book').valid, false);
+    test(G1, 'ADVANCED: Rejects all-caps title',   validateTitle('DUNE').valid, false);
+    test(G1, 'Accepts mixed-case acronym title',   validateTitle('The FBI Files').valid, true);
+    test(G1, 'Single character title',             validateTitle('Z').valid, true);
+
+    // ─── Group 2: validateAuthor ───────────────────────────
+    const G2 = 'validateAuthor';
+    test(G2, 'Accepts normal author',              validateAuthor('Patrick Rothfuss').valid, true);
+    test(G2, 'Rejects empty author',               validateAuthor('').valid, false);
+    test(G2, 'Rejects leading space',              validateAuthor(' Frank Herbert').valid, false);
+    test(G2, 'ADVANCED: Rejects dup word (back-ref)', validateAuthor('Herbert Herbert').valid, false);
+    test(G2, 'Accepts single-word name',           validateAuthor('Voltaire').valid, true);
+
+    // ─── Group 3: validatePages ────────────────────────────
+    const G3 = 'validatePages';
+    test(G3, 'Accepts "312"',                      validatePages('312').valid, true);
+    test(G3, 'Accepts "1"',                        validatePages('1').valid, true);
+    test(G3, 'Rejects "0"',                        validatePages('0').valid, false);
+    test(G3, 'Rejects "-5"',                       validatePages('-5').valid, false);
+    test(G3, 'Rejects "12.5" (1 decimal)',         validatePages('12.5').valid, true);
+    test(G3, 'Rejects "12.500" (3 decimals)',      validatePages('12.500').valid, false);
+    test(G3, 'Rejects "abc"',                      validatePages('abc').valid, false);
+    test(G3, 'Rejects empty',                      validatePages('').valid, false);
+    test(G3, 'Rejects 100000 (too large)',         validatePages('100000').valid, false);
+
+    // ─── Group 4: validateDate ─────────────────────────────
+    const G4 = 'validateDate';
+    test(G4, 'Accepts "2025-09-25"',               validateDate('2025-09-25').valid, true);
+    test(G4, 'Accepts "2000-01-01"',               validateDate('2000-01-01').valid, true);
+    test(G4, 'Rejects "2025-13-01" (bad month)',   validateDate('2025-13-01').valid, false);
+    test(G4, 'Rejects "2025-00-01" (month 0)',     validateDate('2025-00-01').valid, false);
+    test(G4, 'Rejects "25-09-2025" (wrong order)', validateDate('25-09-2025').valid, false);
+    test(G4, 'Rejects "2025/09/25" (slashes)',     validateDate('2025/09/25').valid, false);
+    test(G4, 'Rejects empty',                      validateDate('').valid, false);
+    test(G4, 'Rejects "2025-09-32" (day 32)',      validateDate('2025-09-32').valid, false);
+
+    // ─── Group 5: validateTag ──────────────────────────────
+    const G5 = 'validateTag';
+    test(G5, 'Accepts "Fantasy"',                  validateTag('Fantasy').valid, true);
+    test(G5, 'Accepts "Sci-Fi"',                   validateTag('Sci-Fi').valid, true);
+    test(G5, 'Accepts "Self Help"',                validateTag('Self Help').valid, true);
+    test(G5, 'Rejects "Fantasy!"',                 validateTag('Fantasy!').valid, false);
+    test(G5, 'Rejects "123"',                      validateTag('123').valid, false);
+    test(G5, 'Rejects empty',                      validateTag('').valid, false);
+    test(G5, 'Rejects leading space',              validateTag(' Fantasy').valid, false);
+
+    // ─── Group 6: validateISBN ─────────────────────────────
+    const G6 = 'validateISBN';
+    test(G6, 'Empty ISBN is valid (optional)',      validateISBN('').valid, true);
+    test(G6, 'Accepts ISBN-13 with hyphens',       validateISBN('978-0-7564-0407-1').valid, true);
+    test(G6, 'Accepts short ISBN-10',              validateISBN('0-7564-0407-X').valid, true);
+    test(G6, 'Rejects random text',                validateISBN('not-an-isbn-at-all-here').valid, false);
+
+    // ─── Group 7: warnDuplicateWords (ADVANCED back-ref) ───
+    const G7 = 'warnDuplicateWords (\\b(\\w+)\\s+\\1\\b)';
+    test(G7, 'Detects "the the" duplicate',        warnDuplicateWords('This is the the problem').warn, true);
+    test(G7, 'Detects "very very" duplicate',      warnDuplicateWords('It is very very good').warn, true);
+    test(G7, 'No warn on clean text',              warnDuplicateWords('A beautifully written narrative.').warn, false);
+    test(G7, 'No warn on empty',                   warnDuplicateWords('').warn, false);
+
+    // ─── Group 8: compileRegex (search) ────────────────────
+    const G8 = 'compileRegex';
+    test(G8, 'Returns RegExp for valid pattern',   compileRegex('dune') instanceof RegExp, true);
+    test(G8, 'Returns null for empty string',      compileRegex(''), null);
+    test(G8, 'Returns null for invalid regex',     compileRegex('[unclosed'), null);
+    test(G8, 'Case-insensitive by default',        compileRegex('dune').flags.includes('i'), true);
+    test(G8, 'Case-sensitive when requested',      !compileRegex('dune', true).flags.includes('i'), true);
+
+    // ─── Group 9: validateRegexPattern ─────────────────────
+    const G9 = 'validateRegexPattern';
+    test(G9, 'Valid pattern "^hello"',             validateRegexPattern('^hello').valid, true);
+    test(G9, 'Valid lookahead "(?=\\d)"',          validateRegexPattern('(?=\\d)').valid, true);
+    test(G9, 'Invalid "[unclosed"',                validateRegexPattern('[unclosed').valid, false);
+    test(G9, 'Empty string is valid (no search)',  validateRegexPattern('').valid, true);
+
+    // ─── Group 10: highlight ───────────────────────────────
+    const G10 = 'highlight (XSS safety + marking)';
+    const re1 = /dune/i;
+    const hl1 = highlight('Dune is great', re1);
+    test(G10, 'Wraps match in <mark>',             hl1.includes('<mark>Dune</mark>'), true);
+    test(G10, 'No match returns escaped text',     highlight('Hello World', /xyz/i), 'Hello World');
+    test(G10, 'Escapes HTML in plain text',        highlight('<script>', null), '&lt;script&gt;');
+    test(G10, 'Escapes HTML in match context',     highlight('<b>bold</b>', /bold/i).includes('&lt;b&gt;'), true);
+    test(G10, 'Null regex returns escaped text',   highlight('Normal text', null), 'Normal text');
+
+    // ─── Group 11: validateImport ──────────────────────────
+    const G11 = 'validateImport';
+    const goodData = [{
+      id:'x', title:'T', author:'A', pages:100, tag:'Fiction',
+      dateAdded:'2025-01-01', createdAt:'2025-01-01T00:00:00Z', updatedAt:'2025-01-01T00:00:00Z'
+    }];
+    test(G11, 'Accepts valid array',               validateImport(goodData).valid, true);
+    test(G11, 'Rejects non-array (object)',        validateImport({}).valid, false);
+    test(G11, 'Rejects empty array',               validateImport([]).valid, false);
+    test(G11, 'Rejects missing "pages" field',     validateImport([{id:'x',title:'T',author:'A',tag:'F',dateAdded:'2025-01-01',createdAt:'',updatedAt:''}]).valid, false);
+
+    // ─── Group 12: ADVANCED Lookahead in title ──────────────
+    const G12 = 'validateTitle — negative lookahead (not all-caps)';
+    test(G12, 'Rejects "DUNE"',                   validateTitle('DUNE').valid, false);
+    test(G12, 'Rejects "THE MATRIX"',             validateTitle('THE MATRIX').valid, false);
+    test(G12, 'Accepts "The Matrix"',             validateTitle('The Matrix').valid, true);
+    test(G12, 'Accepts "NASA Report"',            validateTitle('NASA Report').valid, true);
+
+    // ────────────────────────────────────────────────────────
+    // RENDER RESULTS
+    // ────────────────────────────────────────────────────────
+    const output = document.getElementById('output');
+    const groups = {};
+    results.forEach(r => {
+      if (!groups[r.group]) groups[r.group] = [];
+      groups[r.group].push(r);
+    });
+
+    let passCount = 0, failCount = 0;
+
+    Object.entries(groups).forEach(([group, tests]) => {
+      const h2 = document.createElement('h2');
+      h2.textContent = group;
+      output.appendChild(h2);
+
+      tests.forEach(t => {
+        const div = document.createElement('div');
+        div.className = 'test';
+        const cls = t.pass ? 'pass' : 'fail';
+        const icon = t.pass ? '✓' : '✗';
+        div.innerHTML = `
+          <span class="icon ${cls}">${icon}</span>
+          <span class="label">${t.label}</span>
+          <span class="${cls}">${t.pass ? 'PASS' : `FAIL (got: ${JSON.stringify(t.actual)}, expected: ${JSON.stringify(t.expected)})`}</span>`;
+        output.appendChild(div);
+        t.pass ? passCount++ : failCount++;
+      });
+    });
+
+    const summary = document.createElement('div');
+    summary.className = 'summary';
+    summary.innerHTML = `
+      <b>Results:</b> ${passCount + failCount} tests — 
+      <span style="color:#5aae70">${passCount} passed</span>, 
+      <span style="color:${failCount > 0 ? '#d45060' : '#5aae70'}">${failCount} failed</span>
+    `;
+    output.appendChild(summary);
+  </script>
+</body>
+</html>
