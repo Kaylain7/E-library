@@ -1,6 +1,6 @@
 // ui.js — all DOM rendering
-import { getFilteredSorted, getRecords, getSettings, getSearchPattern, getUniqueTags } from './state.js';
-import { highlight, escapeHtml } from './search.js';
+import { getFilteredSorted, getRecords, getSettings, getSearchPattern, getUniqueTags } from './scripts/state.js';
+import { highlight, escapeHtml } from './scripts/search.js';
 
 const $ = id => document.getElementById(id);
 const setText = (id, v) => { const el = $(id); if (el) el.textContent = String(v); };

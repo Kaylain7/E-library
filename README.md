@@ -108,7 +108,7 @@ book-vault/
 
 ```bash
 # Clone
-git clone https://github.com/yourusername/book-vault.git
+git clone https://github.com/Kaylain7/E-library.git
 cd book-vault
 
 # Serve (ES modules require a server)

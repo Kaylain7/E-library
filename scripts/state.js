@@ -1,5 +1,5 @@
 // state.js — single source of truth
-import { loadRecords, saveRecords, loadSettings, saveSettings } from './storage.js';
+import { loadRecords, saveRecords, loadSettings, saveSettings } from './scripts/storage.js';
 
 const state = {
   records: [],
