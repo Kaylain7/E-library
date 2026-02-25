@@ -1,14 +1,14 @@
 // validators.js — all regex validation for Book & Notes Vault
 
 // Patterns
-const RE_CLEAN    = /^\S(?:.*\S)?$|^\S$/;   // no leading/trailing spaces
-const RE_DBLSPACE = /  /;                    // consecutive spaces
+const RE_CLEAN    = /^\S(?:.*\S)?$|^\S$/;   
+const RE_DBLSPACE = /  /;                    
 const RE_PAGES    = /^(0|[1-9]\d*)(\.\d{1,2})?$/;
 const RE_DATE     = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
 const RE_TAG      = /^[A-Za-z]+(?:[ -][A-Za-z]+)*$/;
 const RE_ISBN     = /^(?:(?:\d[\s-]?){9}[\dX]|(?:\d[\s-]?){13})$|^$/;
-const RE_DUPWORD  = /\b(\w+)\s+\1\b/i;                // ADVANCED: back-reference
-const RE_ALLCAPS  = /^(?![A-Z\s]+$).+$/;              // ADVANCED: negative lookahead
+const RE_DUPWORD  = /\b(\w+)\s+\1\b/i;                
+const RE_ALLCAPS  = /^(?![A-Z\s]+$).+$/;              
 
 const ok  = ()  => ({ valid: true,  message: '' });
 const err = msg => ({ valid: false, message: msg });
