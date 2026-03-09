@@ -1,10 +1,24 @@
-// storage.js — localStorage persistence
-const K = { r: 'bnv:records', s: 'bnv:settings' };
-const defaults = { pageCap: 1000, unit: 'pages', theme: 'light' };
-const parse = (key, fallback) => { try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; } };
+// scripts/storage.js — localStorage persistence layer
 
-export const loadRecords  = () => { const d = parse(K.r, []); return Array.isArray(d) ? d : []; };
-export const saveRecords  = r  => localStorage.setItem(K.r, JSON.stringify(r));
-export const loadSettings = () => ({ ...defaults, ...parse(K.s, {}) });
-export const saveSettings = s  => localStorage.setItem(K.s, JSON.stringify(s));
-export const clearAll     = () => { localStorage.removeItem(K.r); localStorage.removeItem(K.s); };
+const BOOKS_KEY    = 'vault:books';
+const SETTINGS_KEY = 'vault:settings';
+
+export function load() {
+  try { return JSON.parse(localStorage.getItem(BOOKS_KEY) || '[]'); }
+  catch { return []; }
+}
+
+export function save(data) {
+  try { localStorage.setItem(BOOKS_KEY, JSON.stringify(data)); return true; }
+  catch { return false; }
+}
+
+export function loadSettings() {
+  try { return JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}'); }
+  catch { return {}; }
+}
+
+export function saveSettings(s) {
+  try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(s)); return true; }
+  catch { return false; }
+}

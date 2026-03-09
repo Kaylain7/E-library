@@ -1,146 +1,163 @@
-[
-  {
-    "id": "book_seed_001",
-    "title": "The Name of the Wind",
-    "author": "Patrick Rothfuss",
-    "pages": 662,
-    "tag": "Fantasy",
-    "dateAdded": "2025-09-25",
-    "isbn": "978-0-7564-0407-1",
-    "notes": "A beautifully written first-person narrative. Magic system feels original.",
-    "createdAt": "2025-09-25T08:14:00.000Z",
-    "updatedAt": "2025-09-25T08:14:00.000Z"
-  },
-  {
-    "id": "book_seed_002",
-    "title": "Dune",
-    "author": "Frank Herbert",
-    "pages": 896,
-    "tag": "Sci-Fi",
-    "dateAdded": "2025-10-01",
-    "isbn": "978-0-441-01359-8",
-    "notes": "Dense political ecology. Atreides and Harkonnen dynamics are gripping.",
-    "createdAt": "2025-10-01T10:00:00.000Z",
-    "updatedAt": "2025-10-01T10:00:00.000Z"
-  },
-  {
-    "id": "book_seed_003",
-    "title": "Thinking, Fast and Slow",
-    "author": "Daniel Kahneman",
-    "pages": 499,
-    "tag": "Non-Fiction",
-    "dateAdded": "2025-10-08",
-    "isbn": "978-0-374-27563-1",
-    "notes": "System 1 and System 2 thinking. Excellent review of cognitive biases.",
-    "createdAt": "2025-10-08T12:30:00.000Z",
-    "updatedAt": "2025-10-08T12:30:00.000Z"
-  },
-  {
-    "id": "book_seed_004",
-    "title": "A Short History of Nearly Everything",
-    "author": "Bill Bryson",
-    "pages": 544,
-    "tag": "Science",
-    "dateAdded": "2025-10-15",
-    "isbn": "978-0-7679-0817-7",
-    "notes": "Wonderfully accessible overview of natural science from Big Bang to today.",
-    "createdAt": "2025-10-15T09:00:00.000Z",
-    "updatedAt": "2025-10-15T09:00:00.000Z"
-  },
-  {
-    "id": "book_seed_005",
-    "title": "Crime and Punishment",
-    "author": "Fyodor Dostoevsky",
-    "pages": 671,
-    "tag": "Classic",
-    "dateAdded": "2025-11-03",
-    "isbn": "",
-    "notes": "Raskolnikov is one of literature's most psychologically complex protagonists.",
-    "createdAt": "2025-11-03T14:20:00.000Z",
-    "updatedAt": "2025-11-03T14:20:00.000Z"
-  },
-  {
-    "id": "book_seed_006",
-    "title": "The Pragmatic Programmer",
-    "author": "David Thomas",
-    "pages": 352,
-    "tag": "Tech",
-    "dateAdded": "2025-11-10",
-    "isbn": "978-0-13-595705-9",
-    "notes": "DRY, orthogonality, tracer bullets. Essential reading for software developers.",
-    "createdAt": "2025-11-10T17:45:00.000Z",
-    "updatedAt": "2025-11-10T17:45:00.000Z"
-  },
-  {
-    "id": "book_seed_007",
-    "title": "Ender's Game",
-    "author": "Orson Scott Card",
-    "pages": 226,
-    "tag": "Sci-Fi",
-    "dateAdded": "2025-12-01",
-    "isbn": "978-0-7653-2836-4",
-    "notes": "Short but punchy. The twist at the end still hits hard on rereads.",
-    "createdAt": "2025-12-01T11:00:00.000Z",
-    "updatedAt": "2025-12-01T11:00:00.000Z"
-  },
-  {
-    "id": "book_seed_008",
-    "title": "The Midnight Library",
-    "author": "Matt Haig",
-    "pages": 288,
-    "tag": "Fiction",
-    "dateAdded": "2025-12-14",
-    "isbn": "978-0-525-55947-4",
-    "notes": "A meditation on regret and possibility. Nora Seed is deeply relatable.",
-    "createdAt": "2025-12-14T20:00:00.000Z",
-    "updatedAt": "2025-12-14T20:00:00.000Z"
-  },
-  {
-    "id": "book_seed_009",
-    "title": "Zero: The Biography of a Dangerous Idea",
-    "author": "Charles Seife",
-    "pages": 248,
-    "tag": "Science",
-    "dateAdded": "2026-01-04",
-    "isbn": "978-0-14-029647-1",
-    "notes": "Surprisingly thrilling for a book about a number. Covers theology and calculus.",
-    "createdAt": "2026-01-04T08:00:00.000Z",
-    "updatedAt": "2026-01-04T08:00:00.000Z"
-  },
-  {
-    "id": "book_seed_010",
-    "title": "Norwegian Wood",
-    "author": "Haruki Murakami",
-    "pages": 296,
-    "tag": "Fiction",
-    "dateAdded": "2026-01-19",
-    "isbn": "978-0-375-70402-1",
-    "notes": "Melancholic and beautiful. Loss and memory handled with extraordinary gentleness.",
-    "createdAt": "2026-01-19T15:30:00.000Z",
-    "updatedAt": "2026-01-19T15:30:00.000Z"
-  },
-  {
-    "id": "book_seed_011",
-    "title": "Small Great Things",
-    "author": "Jodi Picoult",
-    "pages": 470,
-    "tag": "Fiction",
-    "dateAdded": "2026-02-01",
-    "isbn": "",
-    "notes": "Challenging and necessary. Tackles systemic racism through a courtroom drama lens.",
-    "createdAt": "2026-02-01T09:00:00.000Z",
-    "updatedAt": "2026-02-01T09:00:00.000Z"
-  },
-  {
-    "id": "book_seed_012",
-    "title": "Atomic Habits",
-    "author": "James Clear",
-    "pages": 320,
-    "tag": "Self-Help",
-    "dateAdded": "2026-02-10",
-    "isbn": "978-0-7352-1129-2",
-    "notes": "1% improvements compounding over time. Practical and immediately actionable.",
-    "createdAt": "2026-02-10T07:00:00.000Z",
-    "updatedAt": "2026-02-10T07:00:00.000Z"
-  }
-]
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Book &amp; Notes Vault — Tests</title>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:'Courier New',monospace;background:#1a1209;color:#e0d8c8;padding:2rem}
+    h1{color:#c9922a;margin-bottom:1.5rem;font-size:1.4rem}
+    h2{color:#c4622a;margin:1.5rem 0 0.4rem;font-size:.95rem;text-transform:uppercase;letter-spacing:.06em}
+    .test{padding:.3rem .6rem;margin:2px 0;border-radius:3px;font-size:.82rem}
+    .pass{background:rgba(42,107,60,.3);border-left:3px solid #2a6b3c;color:#7ecf97}
+    .fail{background:rgba(160,25,13,.3);border-left:3px solid #a0190d;color:#f08080}
+    #summary{margin-top:1.5rem;font-size:1rem;padding:.75rem;border-radius:4px}
+    .all-pass{background:rgba(42,107,60,.4);color:#7ecf97}
+    .has-fail{background:rgba(160,25,13,.4);color:#f08080}
+  </style>
+</head>
+<body>
+  <h1>📚 Book &amp; Notes Vault — Test Suite</h1>
+  <div id="results"></div>
+  <div id="summary"></div>
+
+  <script type="module">
+    import {
+      validateTitle, validateAuthor, validatePages, validateDate, validateTag,
+      validateISBN, warnDuplicateWords, validateAll,
+      compileRegex, validateRegexPattern, validateImport
+    } from './scripts/validators.js';
+
+    const results = [];
+    function assert(desc, cond) { results.push({ desc, pass: !!cond }); }
+
+    /* ── Title / Author (Rule 1 + back-ref) ── */
+    assert('validateTitle: valid title passes',              validateTitle('The Great Gatsby') === null);
+    assert('validateTitle: leading space fails',             validateTitle(' Bad') !== null);
+    assert('validateTitle: trailing space fails',            validateTitle('Bad ') !== null);
+    assert('validateTitle: empty string fails',              validateTitle('') !== null);
+    assert('validateTitle: single word passes',              validateTitle('Dune') === null);
+    assert('validateTitle: dup word "the the" fails (back-ref)', validateTitle('The the Road') !== null);
+    assert('validateTitle: dup word mid-sentence fails',     validateTitle('War war and Peace') !== null);
+    assert('validateTitle: no dup word passes',              validateTitle('War and Peace') === null);
+    assert('validateAuthor: valid author passes',            validateAuthor('Frank Herbert') === null);
+    assert('validateAuthor: empty fails',                    validateAuthor('') !== null);
+
+    /* ── Pages (Rule 2) ── */
+    assert('validatePages: integer passes',                  validatePages('320') === null);
+    assert('validatePages: 1 decimal passes',                validatePages('12.5') === null);
+    assert('validatePages: 2 decimals passes',               validatePages('0.50') === null);
+    assert('validatePages: zero passes',                     validatePages('0') === null);
+    assert('validatePages: negative fails',                  validatePages('-5') !== null);
+    assert('validatePages: leading zero "012" fails',        validatePages('012') !== null);
+    assert('validatePages: 3 decimals fails',                validatePages('1.555') !== null);
+    assert('validatePages: non-numeric fails',               validatePages('abc') !== null);
+    assert('validatePages: empty fails',                     validatePages('') !== null);
+
+    /* ── Date (Rule 3) ── */
+    assert('validateDate: valid date passes',                validateDate('2025-09-25') === null);
+    assert('validateDate: month 13 fails',                   validateDate('2025-13-01') !== null);
+    assert('validateDate: day 00 fails',                     validateDate('2025-09-00') !== null);
+    assert('validateDate: wrong format fails',               validateDate('25-09-2025') !== null);
+    assert('validateDate: empty fails',                      validateDate('') !== null);
+    assert('validateDate: leap day 2024-02-29 passes',       validateDate('2024-02-29') === null);
+
+    /* ── Tag (Rule 4) ── */
+    assert('validateTag: single word passes',                validateTag('Fiction') === null);
+    assert('validateTag: hyphenated passes',                 validateTag('Sci-Fi') === null);
+    assert('validateTag: two words passes',                  validateTag('Non Fiction') === null);
+    assert('validateTag: starts with digit fails',           validateTag('123Fiction') !== null);
+    assert('validateTag: trailing hyphen fails',             validateTag('Fiction-') !== null);
+    assert('validateTag: empty fails',                       validateTag('') !== null);
+    assert('validateTag: special chars fail',                validateTag('Sci@Fi') !== null);
+
+    /* ── ISBN (Rule 5 — lookahead) ── */
+    assert('validateISBN: empty passes (optional)',          validateISBN('') === null);
+    assert('validateISBN: valid ISBN-13 with hyphens',       validateISBN('978-0-7564-0407-9') === null);
+    assert('validateISBN: valid ISBN-10 digits only',        validateISBN('0141018097') === null);
+    assert('validateISBN: garbage fails',                    validateISBN('notanisbn') !== null);
+    assert('validateISBN: too short fails',                  validateISBN('978-0-75') !== null);
+
+    /* ── warnDuplicateWords ── */
+    assert('warnDuplicateWords: dup word in notes warns',    warnDuplicateWords('I saw the the cat') !== null);
+    assert('warnDuplicateWords: clean text returns null',    warnDuplicateWords('Clean notes here') === null);
+    assert('warnDuplicateWords: empty returns null',         warnDuplicateWords('') === null);
+
+    /* ── validateAll ── */
+    const valid = validateAll({ title:'Dune', author:'Herbert', pages:'688',
+                                dateAdded:'2025-09-20', tag:'Sci-Fi', isbn:'', notes:'' });
+    assert('validateAll: all valid fields → allValid true',  valid.allValid === true);
+    const invalid = validateAll({ title:'', author:'Herbert', pages:'688',
+                                  dateAdded:'2025-09-20', tag:'Sci-Fi', isbn:'', notes:'' });
+    assert('validateAll: empty title → allValid false',      invalid.allValid === false);
+
+    /* ── validateRegexPattern ── */
+    assert('validateRegexPattern: plain text valid',         validateRegexPattern('hello').valid);
+    assert('validateRegexPattern: /valid/ is valid',         validateRegexPattern('/^hello$/').valid);
+    assert('validateRegexPattern: /[bad/ is invalid',        !validateRegexPattern('/[bad/').valid);
+    assert('validateRegexPattern: empty is valid',           validateRegexPattern('').valid);
+
+    /* ── compileRegex ── */
+    const re1 = compileRegex('dune', false);
+    assert('compileRegex: plain text compiles',              re1 !== null);
+    assert('compileRegex: case-insensitive matches "Dune"',  re1?.test('Dune'));
+
+    const re2 = compileRegex('/^The/', false);
+    assert('compileRegex: /^The/ notation compiles',         re2 !== null);
+    assert('compileRegex: /^The/ matches "The Name"',        re2?.test('The Name'));
+    assert('compileRegex: /^The/ does not match "A The"',    !re2?.test('A The'));
+
+    const re3 = compileRegex('/[unclosed/', false);
+    assert('compileRegex: invalid pattern returns null',     re3 === null);
+
+    const reNull = compileRegex('');
+    assert('compileRegex: empty returns null',               reNull === null);
+
+    /* ── validateImport ── */
+    const now = new Date().toISOString();
+    const good = [{ id:'book_1', title:'T', author:'A', pages:100, tag:'X',
+                    dateAdded:'2025-01-01', createdAt:now, updatedAt:now }];
+    const bad  = [{ id:'book_1', title:'T' }]; // missing fields
+
+    assert('validateImport: valid array passes',             validateImport(good).valid);
+    assert('validateImport: missing fields fails',           !validateImport(bad).valid);
+    assert('validateImport: non-array fails',                !validateImport({}).valid);
+    assert('validateImport: pages as string fails',          !validateImport([{...good[0], pages:'320'}]).valid);
+
+    /* ── Render ── */
+    const container = document.getElementById('results');
+    let pass = 0, fail = 0;
+
+    const suites = [
+      ['Title / Author (Rule 1 + back-reference)', 0, 10],
+      ['Pages (Rule 2)', 10, 19],
+      ['Date (Rule 3)', 19, 25],
+      ['Tag (Rule 4)', 25, 32],
+      ['ISBN (Rule 5 — lookahead)', 32, 37],
+      ['warnDuplicateWords', 37, 40],
+      ['validateAll', 40, 42],
+      ['validateRegexPattern', 42, 46],
+      ['compileRegex', 46, 54],
+      ['validateImport', 54, 58],
+    ];
+
+    suites.forEach(([name, from, to]) => {
+      const h2 = document.createElement('h2');
+      h2.textContent = name;
+      container.appendChild(h2);
+      results.slice(from, to).forEach(t => {
+        const div = document.createElement('div');
+        div.className = 'test ' + (t.pass ? 'pass' : 'fail');
+        div.textContent = (t.pass ? '✔ ' : '✘ ') + t.desc;
+        container.appendChild(div);
+        t.pass ? pass++ : fail++;
+      });
+    });
+
+    const summary = document.getElementById('summary');
+    summary.textContent = `${pass + fail} tests — ${pass} passed, ${fail} failed`;
+    summary.className = fail === 0 ? 'all-pass' : 'has-fail';
+  </script>
+</body>
+</html>

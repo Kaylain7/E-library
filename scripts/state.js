@@ -1,72 +1,94 @@
-// state.js — single source of truth
-import { loadRecords, saveRecords, loadSettings, saveSettings } from './scripts/storage.js';
+// scripts/state.js — centralised app state (matches main.js API)
 
-const state = {
-  records: [],
-  settings: { pageCap: 1000, unit: 'pages', theme: 'light' },
-  re: null,
-  sort: 'date-desc',
-  tag: '',
+import { load, save, loadSettings as loadSett, saveSettings as saveSett } from './storage.js';
+
+// ── Defaults ──────────────────────────────────────────────
+const DEFAULT_SETTINGS = {
+  theme:   'light',
+  unit:    'pages',
+  pageCap: 5000,
 };
 
-export const initState      = () => { state.records = loadRecords(); state.settings = loadSettings(); };
-export const getRecords     = () => state.records;
-export const getSettings    = () => state.settings;
-export const getSearchPattern = () => state.re;
-export const getTagFilter   = () => state.tag;
-export const getUniqueTags  = () => [...new Set(state.records.map(r => r.tag).filter(Boolean))].sort();
+let _records       = [];
+let _settings      = { ...DEFAULT_SETTINGS };
+let _searchPattern = null;
+let _sortKey       = 'dateAdded-desc';
+let _tagFilter     = '';
 
-export function setSearchPattern(re) { state.re = re; }
-export function setSortKey(k)        { state.sort = k; }
-export function setTagFilter(t)      { state.tag = t; }
-
-export function updateSettings(patch) {
-  state.settings = { ...state.settings, ...patch };
-  saveSettings(state.settings);
+// ── Boot ──────────────────────────────────────────────────
+export function initState() {
+  _records  = load();
+  _settings = { ...DEFAULT_SETTINGS, ...loadSett() };
 }
 
+// ── Records ───────────────────────────────────────────────
+export function getRecords() { return [..._records]; }
+
 export function addRecord(record) {
-  state.records.push(record);
-  saveRecords(state.records);
+  _records.push(record);
+  save(_records);
 }
 
 export function updateRecord(id, patch) {
-  const i = state.records.findIndex(r => r.id === id);
-  if (i === -1) return false;
-  state.records[i] = { ...state.records[i], ...patch, updatedAt: new Date().toISOString() };
-  saveRecords(state.records);
+  const idx = _records.findIndex(r => r.id === id);
+  if (idx === -1) return false;
+  _records[idx] = { ..._records[idx], ...patch, updatedAt: new Date().toISOString() };
+  save(_records);
   return true;
 }
 
 export function deleteRecord(id) {
-  const len = state.records.length;
-  state.records = state.records.filter(r => r.id !== id);
-  if (state.records.length !== len) { saveRecords(state.records); return true; }
-  return false;
+  _records = _records.filter(r => r.id !== id);
+  save(_records);
 }
 
 export function replaceAllRecords(records) {
-  state.records = records;
-  saveRecords(state.records);
+  _records = Array.isArray(records) ? records : [];
+  save(_records);
 }
+
+// ── Search / Sort / Filter ────────────────────────────────
+export function setSearchPattern(re) { _searchPattern = re; }
+export function getSearchPattern()   { return _searchPattern; }
+
+export function setSortKey(key)   { _sortKey = key; }
+export function getSortKey()      { return _sortKey; }
+
+export function setTagFilter(tag) { _tagFilter = tag; }
+export function getTagFilter()    { return _tagFilter; }
 
 export function getFilteredSorted() {
-  const { re, tag, sort } = state;
-  let out = state.records.filter(r => {
-    if (tag && r.tag !== tag) return false;
-    if (re) return re.test([r.title, r.author, r.tag, r.notes || ''].join(' '));
-    return true;
-  });
-  return out.sort((a, b) => {
-    if (sort === 'date-desc')  return new Date(b.dateAdded) - new Date(a.dateAdded);
-    if (sort === 'date-asc')   return new Date(a.dateAdded) - new Date(b.dateAdded);
-    if (sort === 'title-asc')  return a.title.localeCompare(b.title);
-    if (sort === 'title-desc') return b.title.localeCompare(a.title);
-    if (sort === 'pages-desc') return b.pages - a.pages;
-    if (sort === 'pages-asc')  return a.pages - b.pages;
+  let list = [..._records];
+  if (_tagFilter) list = list.filter(r => r.tag === _tagFilter);
+  if (_searchPattern) {
+    list = list.filter(r =>
+      _searchPattern.test(r.title)  ||
+      _searchPattern.test(r.author) ||
+      _searchPattern.test(r.tag)    ||
+      _searchPattern.test(r.notes || '')
+    );
+  }
+  const [field, dir] = _sortKey.split('-');
+  list.sort((a, b) => {
+    let va = a[field] ?? '', vb = b[field] ?? '';
+    if (field === 'pages') { va = parseFloat(va) || 0; vb = parseFloat(vb) || 0; }
+    else { va = String(va).toLowerCase(); vb = String(vb).toLowerCase(); }
+    if (va < vb) return dir === 'asc' ? -1 : 1;
+    if (va > vb) return dir === 'asc' ? 1 : -1;
     return 0;
   });
+  return list;
 }
 
-let _seq = 0;
-export const generateId = () => `book_${Date.now().toString(36)}_${(++_seq).toString().padStart(4,'0')}`;
+// ── Settings ──────────────────────────────────────────────
+export function getSettings() { return { ..._settings }; }
+
+export function updateSettings(partial) {
+  _settings = { ..._settings, ...partial };
+  saveSett(_settings);
+}
+
+// ── Helpers ───────────────────────────────────────────────
+export function generateId() {
+  return 'book_' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+}

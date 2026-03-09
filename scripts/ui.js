@@ -1,302 +1,295 @@
-// ui.js — all DOM rendering
-import { getFilteredSorted, getRecords, getSettings, getSearchPattern, getUniqueTags } from './scripts/state.js';
-import { highlight, escapeHtml } from './scripts/search.js';
+// scripts/ui.js — DOM rendering, announcements, dialogs, theme
 
+import { getRecords, getSettings, getFilteredSorted, getSearchPattern, getSortKey, getTagFilter } from './state.js';
+
+// ── Helpers ───────────────────────────────────────────────
 const $ = id => document.getElementById(id);
-const setText = (id, v) => { const el = $(id); if (el) el.textContent = String(v); };
 
-function formatPages(pages, unit, cap) {
-  const n = Number(pages);
-  if (unit === 'chapters') return Math.round(n / 20);
-  if (unit === 'percent')  return cap ? `${Math.round((n / cap) * 100)}%` : n;
-  return n;
+export function escHtml(s) {
+  return String(s ?? '')
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-// ── Navigation ────────────────────────────────────────────
-export function navigateTo(id) {
-  document.querySelectorAll('.page-section').forEach(s => s.classList.remove('active'));
-  $(`section-${id}`)?.classList.add('active');
-  document.querySelectorAll('.nav-link').forEach(a => {
-    const active = a.dataset.section === id;
-    a.classList.toggle('active', active);
-    a.setAttribute('aria-current', active ? 'page' : 'false');
-  });
+export function highlight(text, re) {
+  if (!re || !text) return escHtml(text ?? '');
+  const esc = escHtml(text);
+  const gre = new RegExp(re.source, (re.flags.replace('g','') + 'g'));
+  return esc.replace(gre, m => `<mark>${m}</mark>`);
 }
 
-// ── Table ─────────────────────────────────────────────────
-export function renderTable() {
-  const tbody = $('catalog-tbody');
-  if (!tbody) return;
-  const records = getFilteredSorted();
-  const re = getSearchPattern();
-  const { unit, pageCap } = getSettings();
-
-  tbody.innerHTML = '';
-  $('empty-state').hidden = records.length > 0;
-  $('record-count').textContent = records.length
-    ? `Showing ${records.length} of ${getRecords().length} book${getRecords().length !== 1 ? 's' : ''}`
-    : '';
-
-  records.forEach(r => {
-    const tr = document.createElement('tr');
-    tr.dataset.id = r.id;
-    tr.innerHTML = `
-      <td>
-        <div class="td-title">${highlight(r.title, re)}</div>
-        <div class="td-author">${highlight(r.author, re)}</div>
-        ${r.isbn ? `<div class="isbn-meta">ISBN: ${escapeHtml(r.isbn)}</div>` : ''}
-      </td>
-      <td class="td-pages">${escapeHtml(String(formatPages(r.pages, unit, pageCap)))}</td>
-      <td class="td-tag"><span class="tag-pill">${highlight(r.tag, re)}</span></td>
-      <td class="td-date">${escapeHtml(r.dateAdded)}</td>
-      <td class="td-actions">
-        <div class="td-actions-inner">
-          <button class="btn btn-sm btn-secondary btn-edit" data-id="${r.id}" aria-label="Edit ${escapeHtml(r.title)}">Edit</button>
-          <button class="btn btn-sm btn-danger btn-delete" data-id="${r.id}" aria-label="Delete ${escapeHtml(r.title)}">Del</button>
-        </div>
-      </td>`;
-    tbody.appendChild(tr);
-  });
-}
-
-// ── Mobile Cards ──────────────────────────────────────────
-export function renderCards() {
-  let box = document.querySelector('.book-cards');
-  if (!box) {
-    box = document.createElement('div');
-    box.className = 'book-cards';
-    document.querySelector('.table-wrap')?.insertAdjacentElement('afterend', box);
-  }
-  const records = getFilteredSorted();
-  const re = getSearchPattern();
-  const { unit, pageCap } = getSettings();
-  box.innerHTML = '';
-  records.forEach(r => {
-    const d = document.createElement('div');
-    d.className = 'book-card';
-    d.dataset.id = r.id;
-    d.innerHTML = `
-      <div class="book-card-title">${highlight(r.title, re)}</div>
-      <div class="book-card-author">${highlight(r.author, re)}</div>
-      <div class="book-card-meta">
-        <span>📄 ${escapeHtml(String(formatPages(r.pages, unit, pageCap)))}</span>
-        <span>🏷 ${highlight(r.tag, re)}</span>
-        <span>📅 ${escapeHtml(r.dateAdded)}</span>
-        ${r.isbn ? `<span>${escapeHtml(r.isbn)}</span>` : ''}
-      </div>
-      <div class="book-card-actions">
-        <button class="btn btn-sm btn-secondary btn-edit" data-id="${r.id}" aria-label="Edit ${escapeHtml(r.title)}">Edit</button>
-        <button class="btn btn-sm btn-danger btn-delete" data-id="${r.id}" aria-label="Delete ${escapeHtml(r.title)}">Delete</button>
-      </div>`;
-    box.appendChild(d);
-  });
-}
-
-// ── Inline Edit Row ───────────────────────────────────────
-export function renderEditRow(rec) {
-  const tr = document.querySelector(`tr[data-id="${rec.id}"]`);
-  if (!tr) return;
-  tr.classList.add('edit-row');
-  tr.innerHTML = `
-    <td colspan="4">
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:.5rem">
-        <input class="edit-input" data-field="title"  value="${escapeHtml(rec.title)}"  aria-label="Title" />
-        <input class="edit-input" data-field="author" value="${escapeHtml(rec.author)}" aria-label="Author" />
-        <input class="edit-input" data-field="pages"  value="${rec.pages}" type="number" aria-label="Pages" />
-        <input class="edit-input" data-field="tag"    value="${escapeHtml(rec.tag)}"    aria-label="Tag" />
-      </div>
-    </td>
-    <td class="td-actions">
-      <div class="td-actions-inner">
-        <button class="btn btn-sm btn-primary btn-save-edit" data-id="${rec.id}">Save</button>
-        <button class="btn btn-sm btn-ghost btn-cancel-edit-row" data-id="${rec.id}">Cancel</button>
-      </div>
-    </td>`;
-  tr.querySelector('.edit-input')?.focus();
-}
-
-// ── Form helpers ──────────────────────────────────────────
-export function populateFormForEdit(rec) {
-  $('edit-id').value    = rec.id;
-  $('f-title').value    = rec.title;
-  $('f-author').value   = rec.author;
-  $('f-pages').value    = rec.pages;
-  $('f-tag').value      = rec.tag;
-  $('f-date').value     = rec.dateAdded;
-  $('f-isbn').value     = rec.isbn || '';
-  $('f-notes').value    = rec.notes || '';
-  $('h-add').textContent = 'Edit Book';
-  $('btn-submit').textContent = 'Save Changes';
-  $('btn-cancel-edit').hidden = false;
-}
-
-export function resetForm() {
-  $('book-form')?.reset();
-  $('edit-id').value = '';
-  $('h-add').textContent = 'Add a Book';
-  $('btn-submit').textContent = 'Add to Vault';
-  $('btn-cancel-edit').hidden = true;
-  document.querySelectorAll('.field-error').forEach(el => el.textContent = '');
-  document.querySelectorAll('.field-input').forEach(el => el.classList.remove('invalid', 'valid'));
-  $('form-status').textContent = '';
-}
-
-// ── Field error display ───────────────────────────────────
-export function showFieldError(fieldId, errId, result) {
-  const input = $(fieldId), errEl = $(errId);
-  if (!input || !errEl) return;
-  const bad = result.valid === false;
-  input.classList.toggle('invalid', bad);
-  input.classList.toggle('valid', !bad && !!input.value.trim());
-  errEl.textContent = bad ? result.message : (result.warn ? result.message : '');
-}
-
-// ── Dashboard ─────────────────────────────────────────────
-export function renderDashboard() {
-  const records = getRecords();
-  const { pageCap, unit } = getSettings();
-  const totalPages = records.reduce((s, r) => s + Number(r.pages || 0), 0);
-  const tagCounts = records.reduce((m, r) => { if (r.tag) m[r.tag] = (m[r.tag] || 0) + 1; return m; }, {});
-  const topTag = Object.entries(tagCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || '—';
-
-  setText('stat-total', records.length);
-  setText('stat-pages', formatPages(totalPages, unit, pageCap));
-  setText('stat-top-tag', topTag);
-  setText('stat-avg', formatPages(records.length ? Math.round(totalPages / records.length) : 0, unit, pageCap));
-  setText('cap-current', formatPages(totalPages, unit, pageCap));
-  setText('cap-target-display', formatPages(pageCap, unit, pageCap));
-
-  const pct = Math.min((totalPages / pageCap) * 100, 100);
-  const fill = $('progress-fill');
-  if (fill) { fill.style.width = `${pct}%`; fill.classList.toggle('over', totalPages > pageCap); }
-  document.querySelector('.progress-bar-wrap')?.setAttribute('aria-valuenow', Math.round(pct));
-
-  const statusEl = $('cap-status-msg');
-  if (statusEl) {
-    const rem = pageCap - totalPages;
-    const over = totalPages >= pageCap;
-    statusEl.textContent = over
-      ? `🎉 Target exceeded by ${formatPages(Math.abs(rem), unit, pageCap)}!`
-      : `${formatPages(rem, unit, pageCap)} pages remaining.`;
-    statusEl.className = `cap-status${over ? ' exceeded' : ''}`;
-  }
-
-  renderWeekChart(records);
-  renderTagBars(tagCounts, records.length);
-}
-
-function renderWeekChart(records) {
-  const chart = $('week-chart');
-  if (!chart) return;
-  chart.innerHTML = '';
-  const days = Array.from({ length: 7 }, (_, i) => {
-    const d = new Date(); d.setDate(d.getDate() - (6 - i));
-    return d.toISOString().slice(0, 10);
-  });
-  const counts = Object.fromEntries(days.map(d => [d, 0]));
-  records.forEach(r => { if (counts[r.dateAdded] !== undefined) counts[r.dateAdded]++; });
-  const max = Math.max(...Object.values(counts), 1);
-  days.forEach(day => {
-    const n = counts[day];
-    const label = new Date(day + 'T12:00').toLocaleDateString('en', { weekday: 'short' });
-    const col = document.createElement('div');
-    col.className = 'bar-day';
-    col.innerHTML = `
-      <div class="bar-fill" style="height:${(n / max) * 100}%" data-count="${n}" role="img" aria-label="${label}: ${n}" tabindex="0"></div>
-      <span class="bar-label">${escapeHtml(label)}</span>`;
-    chart.appendChild(col);
-  });
-}
-
-function renderTagBars(tagCounts, total) {
-  const el = $('tag-bars');
-  if (!el) return;
-  const sorted = Object.entries(tagCounts).sort((a, b) => b[1] - a[1]).slice(0, 8);
-  if (!sorted.length) { el.textContent = 'No tags yet.'; return; }
-  const max = sorted[0][1];
-  el.innerHTML = sorted.map(([tag, count]) => `
-    <div class="tag-bar-row">
-      <span class="tag-bar-name" title="${escapeHtml(tag)}">${escapeHtml(tag)}</span>
-      <div class="tag-bar-track" role="progressbar" aria-valuenow="${count}" aria-valuemin="0" aria-valuemax="${total}">
-        <div class="tag-bar-fill" style="width:${(count / max) * 100}%"></div>
-      </div>
-      <span class="tag-bar-count">${count}</span>
-    </div>`).join('');
-}
-
-// ── Tag filter + datalist ─────────────────────────────────
-export function renderTagFilter() {
-  const sel = $('tag-filter');
-  if (!sel) return;
-  const current = sel.value;
-  sel.innerHTML = '<option value="">All Tags</option>';
-  getUniqueTags().forEach(tag => {
-    const opt = document.createElement('option');
-    opt.value = tag; opt.textContent = tag;
-    if (tag === current) opt.selected = true;
-    sel.appendChild(opt);
-  });
-  const dl = $('tag-suggestions');
-  if (dl) { dl.innerHTML = ''; getUniqueTags().forEach(tag => { const o = document.createElement('option'); o.value = tag; dl.appendChild(o); }); }
-}
-
-// ── ARIA announce ─────────────────────────────────────────
-export function announce(msg, id = 'action-status') {
-  const el = $(id);
+// ── Announce (ARIA live) ──────────────────────────────────
+export function announce(msg, assertive = false) {
+  const el = $(assertive ? 'status-assertive' : 'status-polite');
   if (!el) return;
   el.textContent = '';
   requestAnimationFrame(() => { el.textContent = msg; });
 }
 
-// ── Confirm dialog ────────────────────────────────────────
-let _resolve = null;
-export function openConfirmDialog(msg) {
-  return new Promise(res => {
-    _resolve = res;
-    $('confirm-msg').textContent = msg;
-    $('confirm-dialog').hidden = false;
-    $('confirm-ok')?.focus();
-  });
-}
-export function setupDialog() {
-  const dialog = $('confirm-dialog');
-  if (!dialog) return;
-  dialog.hidden = true;
-  const close = v => { dialog.hidden = true; const r = _resolve; _resolve = null; r?.(v); };
-  $('confirm-ok')?.addEventListener('click', () => close(true));
-  $('confirm-cancel')?.addEventListener('click', () => close(false));
-  dialog.addEventListener('click', e => { if (e.target === dialog) close(false); });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !dialog.hidden) close(false); });
-  dialog.addEventListener('keydown', e => {
-    if (e.key !== 'Tab' || dialog.hidden) return;
-    const btns = [...dialog.querySelectorAll('button')];
-    if (e.shiftKey && document.activeElement === btns[0]) { e.preventDefault(); btns.at(-1).focus(); }
-    else if (!e.shiftKey && document.activeElement === btns.at(-1)) { e.preventDefault(); btns[0].focus(); }
-  });
-}
-
 // ── Theme ─────────────────────────────────────────────────
 export function applyTheme(theme) {
-  document.documentElement.setAttribute('data-theme', theme);
-  const btn = $('theme-toggle');
-  if (btn) {
-    btn.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
-    btn.querySelector('.theme-icon').textContent = theme === 'dark' ? '☀︎' : '☾';
-    btn.setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+  document.documentElement.setAttribute('data-theme', theme ?? 'light');
+}
+
+// ── Section navigation ────────────────────────────────────
+export function navigateTo(sectionId) {
+  document.querySelectorAll('.page-section').forEach(s => s.classList.add('hidden'));
+  const target = $('section-' + sectionId);
+  if (target) {
+    target.classList.remove('hidden');
+    const h = target.querySelector('h1');
+    if (h) { h.setAttribute('tabindex', '-1'); h.focus(); }
+  }
+  document.querySelectorAll('.nav-link').forEach(l => {
+    const active = l.dataset.section === sectionId;
+    l.classList.toggle('active', active);
+    l.setAttribute('aria-current', active ? 'page' : 'false');
+  });
+  // Close hamburger
+  $('hamburger-btn')?.setAttribute('aria-expanded','false');
+  document.body.classList.remove('nav-open');
+}
+
+// ── Tag filter dropdown ───────────────────────────────────
+export function renderTagFilter() {
+  const sel = $('tag-filter');
+  if (!sel) return;
+  const cur  = getTagFilter();
+  const tags = [...new Set(getRecords().map(r => r.tag))].sort();
+  sel.innerHTML = '<option value="">All tags</option>' +
+    tags.map(t => `<option value="${escHtml(t)}"${t === cur ? ' selected':''}>${escHtml(t)}</option>`).join('');
+}
+
+// ── Dashboard ─────────────────────────────────────────────
+export function renderDashboard() {
+  const records = getRecords();
+  const settings = getSettings();
+  const total = records.length;
+  const totalPages = records.reduce((s,r) => s + (r.pages||0), 0);
+
+  // Top tag
+  const tagMap = {};
+  records.forEach(r => { tagMap[r.tag] = (tagMap[r.tag]||0)+1; });
+  const topTag = Object.entries(tagMap).sort((a,b)=>b[1]-a[1])[0]?.[0] ?? '—';
+
+  // Last 7 days
+  const cutoff = new Date(); cutoff.setDate(cutoff.getDate()-7);
+  const recent = records.filter(r => new Date(r.dateAdded) >= cutoff).length;
+
+  if ($('stat-total'))   $('stat-total').textContent   = total;
+  if ($('stat-pages'))   $('stat-pages').textContent   = totalPages.toLocaleString();
+  if ($('stat-top-tag')) $('stat-top-tag').textContent = topTag;
+  if ($('stat-recent'))  $('stat-recent').textContent  = recent;
+
+  renderTrend(records);
+  renderCapBar(records, settings.pageCap ?? 5000);
+}
+
+function renderTrend(records) {
+  const chart  = $('trend-chart');
+  const labels = $('trend-labels');
+  if (!chart || !labels) return;
+  const days = [];
+  for (let i=6; i>=0; i--) {
+    const d = new Date(); d.setDate(d.getDate()-i);
+    days.push(d.toISOString().slice(0,10));
+  }
+  const counts  = days.map(day => records.filter(r => r.dateAdded === day).length);
+  const maxCount = Math.max(...counts, 1);
+  const DAY_NAMES = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  chart.innerHTML = counts.map((c,i) =>
+    `<div class="trend-bar" style="height:${Math.max(4,(c/maxCount)*100)}%"
+          data-count="${c}" title="${days[i]}: ${c}" tabindex="0"
+          aria-label="${days[i]}: ${c} book(s)"></div>`
+  ).join('');
+  labels.innerHTML = days.map(d =>
+    `<span class="trend-label">${DAY_NAMES[new Date(d+'T12:00:00').getDay()]}</span>`
+  ).join('');
+}
+
+function renderCapBar(records, cap) {
+  const total   = records.reduce((s,r) => s+(r.pages||0), 0);
+  const pct     = Math.min((total/cap)*100, 100);
+  const fill    = $('cap-bar-fill');
+  const msg     = $('cap-status');
+  const bar     = $('cap-progress');
+  if (!fill || !msg) return;
+  fill.style.width = pct+'%';
+  fill.classList.toggle('over', total > cap);
+  bar?.setAttribute('aria-valuenow', Math.round(pct));
+  const remaining = cap - total;
+  if (total > cap) {
+    msg.textContent = `🔴 Exceeded by ${(total-cap).toLocaleString()} pages!`;
+    announce(`Reading goal exceeded by ${total-cap} pages!`, true);
+  } else {
+    msg.textContent = `${remaining.toLocaleString()} pages remaining to reach ${cap.toLocaleString()}.`;
   }
 }
 
-// ── Settings populate ─────────────────────────────────────
-export function populateSettings({ pageCap, unit }) {
-  const cap = $('s-page-cap'), u = $('s-unit');
-  if (cap) cap.value = pageCap;
-  if (u)   u.value   = unit;
+// ── Table (desktop) ───────────────────────────────────────
+export function renderTable() {
+  const tbody = $('catalog-tbody');
+  const empty = $('empty-state');
+  const info  = $('results-info');
+  if (!tbody) return;
+
+  const records = getFilteredSorted();
+  const re      = getSearchPattern();
+
+  tbody.innerHTML = '';
+
+  if (records.length === 0) {
+    empty?.classList.remove('hidden');
+    if (info) info.textContent = 'No books match your search.';
+    return;
+  }
+  empty?.classList.add('hidden');
+  if (info) info.textContent = `Showing ${records.length} book${records.length!==1?'s':''}`;
+
+  const frag = document.createDocumentFragment();
+  records.forEach(r => {
+    const tr = document.createElement('tr');
+    tr.dataset.id = r.id;
+    tr.innerHTML = `
+      <td>${highlight(r.title, re)}${r.isbn?`<br><small class="isbn-label">ISBN: ${escHtml(r.isbn)}</small>`:''}
+          ${r.notes?`<div class="notes-preview" title="${escHtml(r.notes)}">${highlight(r.notes.slice(0,70)+(r.notes.length>70?'…':''),re)}</div>`:''}</td>
+      <td>${highlight(r.author, re)}</td>
+      <td>${escHtml(String(r.pages))}</td>
+      <td><span class="tag-pill">${highlight(r.tag, re)}</span></td>
+      <td><time datetime="${escHtml(r.dateAdded)}">${escHtml(r.dateAdded)}</time></td>
+      <td>
+        <div class="action-btns">
+          <button class="btn-sm edit btn-edit"   data-id="${escHtml(r.id)}" aria-label="Edit ${escHtml(r.title)}">Edit</button>
+          <button class="btn-sm delete btn-delete" data-id="${escHtml(r.id)}" aria-label="Delete ${escHtml(r.title)}">Del</button>
+        </div>
+      </td>`;
+    frag.appendChild(tr);
+  });
+  tbody.appendChild(frag);
 }
 
-// ── Full refresh ──────────────────────────────────────────
+/** Replace a table row with inline edit inputs */
+export function renderEditRow(rec) {
+  const row = document.querySelector(`#catalog-tbody tr[data-id="${rec.id}"]`);
+  if (!row) return;
+  row.innerHTML = `
+    <td><input class="edit-input field-input" data-field="title"     value="${escHtml(rec.title)}"     aria-label="Edit title"/></td>
+    <td><input class="edit-input field-input" data-field="author"    value="${escHtml(rec.author)}"    aria-label="Edit author"/></td>
+    <td><input class="edit-input field-input" data-field="pages"     value="${escHtml(String(rec.pages))}" type="number" min="0" aria-label="Edit pages" style="width:70px"/></td>
+    <td><input class="edit-input field-input" data-field="tag"       value="${escHtml(rec.tag)}"       aria-label="Edit tag"/></td>
+    <td><input class="edit-input field-input" data-field="dateAdded" value="${escHtml(rec.dateAdded)}" aria-label="Edit date" placeholder="YYYY-MM-DD"/></td>
+    <td>
+      <div class="action-btns">
+        <button class="btn-sm edit   btn-save-edit"      data-id="${escHtml(rec.id)}" aria-label="Save changes">Save</button>
+        <button class="btn-sm delete btn-cancel-edit-row" data-id="${escHtml(rec.id)}" aria-label="Cancel edit">✕</button>
+      </div>
+    </td>`;
+  row.querySelector('.edit-input')?.focus();
+}
+
+// ── Cards (mobile) ────────────────────────────────────────
+export function renderCards() {
+  const container = $('cards-container');
+  if (!container) return;
+  const records = getFilteredSorted();
+  const re      = getSearchPattern();
+
+  if (records.length === 0) { container.innerHTML = ''; return; }
+
+  container.innerHTML = records.map(r => `
+    <article class="book-card" data-id="${escHtml(r.id)}">
+      <div class="card-header">
+        <strong>${highlight(r.title, re)}</strong>
+        <span class="tag-pill">${highlight(r.tag, re)}</span>
+      </div>
+      <p class="card-author">${highlight(r.author, re)}</p>
+      <p class="card-meta">${escHtml(String(r.pages))} pages · ${escHtml(r.dateAdded)}</p>
+      ${r.notes ? `<p class="card-notes">${highlight(r.notes.slice(0,100)+(r.notes.length>100?'…':''),re)}</p>`:''}
+      <div class="action-btns">
+        <button class="btn-sm edit btn-edit"    data-id="${escHtml(r.id)}" aria-label="Edit ${escHtml(r.title)}">Edit</button>
+        <button class="btn-sm delete btn-delete" data-id="${escHtml(r.id)}" aria-label="Delete ${escHtml(r.title)}">Delete</button>
+      </div>
+    </article>`).join('');
+}
+
+// ── Form helpers ──────────────────────────────────────────
+export function showFieldError(fieldId, errorId, message) {
+  const input = $(fieldId);
+  const err   = $(errorId);
+  if (input) {
+    input.setAttribute('aria-invalid', message ? 'true' : 'false');
+    input.classList.toggle('invalid', !!message);
+    input.classList.toggle('valid',   !message && input.value.trim() !== '');
+  }
+  if (err) err.textContent = message ?? '';
+}
+
+export function resetForm() {
+  $('book-form')?.reset();
+  if ($('edit-id')) $('edit-id').value = '';
+  if ($('form-heading')) $('form-heading').textContent = 'Add a Book';
+  if ($('btn-submit'))   $('btn-submit').textContent   = 'Add to Vault';
+  $('btn-cancel-edit')?.classList.add('hidden');
+  document.querySelectorAll('.field-error').forEach(e => e.textContent='');
+  document.querySelectorAll('.field-input').forEach(e => e.classList.remove('invalid','valid'));
+}
+
+export function populateFormForEdit(rec) {
+  resetForm();
+  if ($('edit-id'))   $('edit-id').value   = rec.id;
+  if ($('f-title'))   $('f-title').value   = rec.title;
+  if ($('f-author'))  $('f-author').value  = rec.author;
+  if ($('f-pages'))   $('f-pages').value   = rec.pages;
+  if ($('f-date'))    $('f-date').value    = rec.dateAdded;
+  if ($('f-tag'))     $('f-tag').value     = rec.tag;
+  if ($('f-isbn'))    $('f-isbn').value    = rec.isbn ?? '';
+  if ($('f-notes'))   $('f-notes').value   = rec.notes ?? '';
+  if ($('form-heading')) $('form-heading').textContent = 'Edit Book';
+  if ($('btn-submit'))   $('btn-submit').textContent   = 'Save Changes';
+  $('btn-cancel-edit')?.classList.remove('hidden');
+}
+
+export function populateSettings(s) {
+  if ($('s-page-cap')) $('s-page-cap').value = s.pageCap ?? 5000;
+  if ($('s-unit'))     $('s-unit').value     = s.unit    ?? 'pages';
+}
+
+// ── Confirm Dialog ────────────────────────────────────────
+let _resolveDialog = null;
+
+export function setupDialog() {
+  $('dialog-confirm')?.addEventListener('click', () => { _resolveDialog?.(true);  closeDialog(); });
+  $('dialog-cancel')?.addEventListener('click',  () => { _resolveDialog?.(false); closeDialog(); });
+  $('confirm-dialog')?.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { _resolveDialog?.(false); closeDialog(); }
+    if (e.key === 'Tab') {
+      const btns = [$('dialog-confirm'), $('dialog-cancel')].filter(Boolean);
+      if (!btns.length) return;
+      e.preventDefault();
+      const idx = btns.indexOf(document.activeElement);
+      btns[(idx + (e.shiftKey ? -1 : 1) + btns.length) % btns.length]?.focus();
+    }
+  });
+}
+
+export function openConfirmDialog(message) {
+  return new Promise(resolve => {
+    _resolveDialog = resolve;
+    const el = $('confirm-dialog');
+    if ($('dialog-desc')) $('dialog-desc').textContent = message;
+    el?.classList.remove('hidden');
+    $('dialog-confirm')?.focus();
+  });
+}
+
+function closeDialog() {
+  $('confirm-dialog')?.classList.add('hidden');
+  _resolveDialog = null;
+}
+
+// ── refreshAll — convenience wrapper ─────────────────────
 export function refreshAll() {
   renderTable();
   renderCards();
-  renderDashboard();
   renderTagFilter();
+  renderDashboard();
 }

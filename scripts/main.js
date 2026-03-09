@@ -28,6 +28,8 @@ $('theme-toggle')?.addEventListener('click', () => {
   updateSettings({ theme: next });
 });
 bindImportExport();
+bindConverter();
+bindHamburger();
 
 // ── Nav ───────────────────────────────────────────────────
 function bindNav() {
@@ -37,6 +39,16 @@ function bindNav() {
       navigateTo(a.dataset.section);
       if (a.dataset.section === 'dashboard') renderDashboard();
     });
+  });
+}
+
+// ── Hamburger ─────────────────────────────────────────────
+function bindHamburger() {
+  const btn = $('hamburger-btn');
+  btn?.addEventListener('click', () => {
+    const open = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', String(!open));
+    document.body.classList.toggle('nav-open', !open);
   });
 }
 
@@ -52,7 +64,7 @@ function bindForm() {
     ['f-notes',  'f-notes-err',  () => warnDuplicateWords($('f-notes').value)],
   ];
   fields.forEach(([fId, eId, validate]) => {
-    $( fId)?.addEventListener('input', () => showFieldError(fId, eId, validate()));
+    $(fId)?.addEventListener('input', () => showFieldError(fId, eId, validate()));
     $(fId)?.addEventListener('blur',  () => showFieldError(fId, eId, validate()));
   });
 
@@ -102,6 +114,7 @@ function handleSubmit() {
   }
   resetForm();
   refreshAll();
+  navigateTo('catalog');
 }
 
 // ── Catalog ───────────────────────────────────────────────
@@ -123,7 +136,12 @@ function bindCatalog() {
   searchCase?.addEventListener('change', applySearch);
   $('sort-select')?.addEventListener('change', () => { setSortKey($('sort-select').value); renderTable(); renderCards(); });
   $('tag-filter')?.addEventListener('change', () => { setTagFilter($('tag-filter').value); renderTable(); renderCards(); });
-  $('btn-clear-search')?.addEventListener('click', () => { if (searchInput) searchInput.value = ''; setSearchPattern(null); renderTable(); renderCards(); });
+  $('btn-clear-search')?.addEventListener('click', () => {
+    if (searchInput) searchInput.value = '';
+    setSearchPattern(null);
+    if (searchErr) searchErr.textContent = '';
+    renderTable(); renderCards();
+  });
 
   // Table actions (event delegation)
   $('catalog-tbody')?.addEventListener('click', async e => {
@@ -149,7 +167,7 @@ function bindCatalog() {
     }
   });
 
-  // Card actions (mobile) — delegated from catalog section
+  // Card actions (mobile)
   $('section-catalog')?.addEventListener('click', async e => {
     if (e.target.closest('.table-wrap')) return;
     const id = e.target.closest('[data-id]')?.dataset.id;
@@ -209,6 +227,23 @@ function bindImportExport() {
     } catch { alert('Import failed: invalid JSON.'); }
     finally   { e.target.value = ''; }
   });
+}
+
+// ── Unit Converter ────────────────────────────────────────
+function bindConverter() {
+  const pagesEl  = $('convert-pages');
+  const unitEl   = $('convert-unit');
+  const outputEl = $('convert-output');
+  function doConvert() {
+    const p = parseFloat(pagesEl?.value);
+    const u = unitEl?.value;
+    if (!outputEl) return;
+    if (isNaN(p) || p < 0) { outputEl.textContent = ''; return; }
+    if (u === 'chapters') outputEl.textContent = `≈ ${Math.round(p/25)} chapters`;
+    else                  outputEl.textContent = `≈ ${(p/30).toFixed(1)} hrs`;
+  }
+  pagesEl?.addEventListener('input',  doConvert);
+  unitEl?.addEventListener('change',  doConvert);
 }
 
 // ── Helpers ───────────────────────────────────────────────
