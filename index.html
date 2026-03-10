@@ -6,354 +6,364 @@
   <title>Book &amp; Notes Vault</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:ital,wght@0,300;0,400;1,300&family=DM+Sans:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles/main.css" />
 </head>
 <body>
-
-  <!-- Skip navigation -->
+  <!-- Skip link -->
   <a href="#main-content" class="skip-link">Skip to main content</a>
 
+  <!-- ARIA live regions -->
+  <div id="status-polite"    role="status" aria-live="polite"    aria-atomic="true" class="sr-only"></div>
+  <div id="status-assertive" role="alert"  aria-live="assertive" aria-atomic="true" class="sr-only"></div>
+
+  <!-- ── Header ── -->
   <header class="site-header" role="banner">
     <div class="header-inner">
-      <div class="logo">
-        <span class="logo-icon" aria-hidden="true">📚</span>
-        <span class="logo-text">Book<em>&amp;</em>Notes<br/><small>Vault</small></span>
-      </div>
-      <nav class="main-nav" role="navigation" aria-label="Main navigation">
-        <ul role="list">
-          <li><a href="#section-dashboard" class="nav-link" data-section="dashboard">Dashboard</a></li>
-          <li><a href="#section-catalog" class="nav-link" data-section="catalog">Catalog</a></li>
-          <li><a href="#section-add" class="nav-link" data-section="add">Add Book</a></li>
-          <li><a href="#section-settings" class="nav-link" data-section="settings">Settings</a></li>
-          <li><a href="#section-about" class="nav-link" data-section="about">About</a></li>
+      <span class="brand" aria-label="Book and Notes Vault home">
+        <span aria-hidden="true">📚</span> Book &amp; Notes Vault
+      </span>
+      <nav aria-label="Main navigation">
+        <ul class="nav-list" role="list">
+          <li><a href="#about"     class="nav-link" data-section="about">About</a></li>
+          <li><a href="#dashboard" class="nav-link" data-section="dashboard">Dashboard</a></li>
+          <li><a href="#catalog"   class="nav-link" data-section="catalog">Catalog</a></li>
+          <li><a href="#add"       class="nav-link" data-section="add">Add Book</a></li>
+          <li><a href="#settings"  class="nav-link" data-section="settings">Settings</a></li>
         </ul>
       </nav>
-      <button id="theme-toggle" class="theme-toggle" aria-label="Toggle dark mode" aria-pressed="false">
-        <span class="theme-icon" aria-hidden="true">☾</span>
-      </button>
+      <div class="header-controls">
+        <button id="theme-toggle" class="btn-icon" aria-label="Toggle dark/light theme" title="Toggle theme">☀︎</button>
+        <button id="hamburger-btn" class="hamburger" aria-label="Toggle navigation" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
     </div>
   </header>
 
-  <main id="main-content" role="main">
+  <!-- ── Main ── -->
+  <main id="main-content" tabindex="-1">
 
-    <!-- ── DASHBOARD ─────────────────────────────── -->
-    <section id="section-dashboard" class="page-section active" aria-labelledby="h-dashboard">
+    <!-- ABOUT -->
+    <section id="section-about" class="page-section" aria-labelledby="about-h1">
       <div class="section-inner">
-        <h1 id="h-dashboard" class="section-title">Dashboard</h1>
-
-        <div class="stats-grid" role="region" aria-label="Reading statistics">
-          <article class="stat-card" aria-label="Total books">
-            <span class="stat-value" id="stat-total">0</span>
-            <span class="stat-label">Books in Vault</span>
-          </article>
-          <article class="stat-card" aria-label="Total pages">
-            <span class="stat-value" id="stat-pages">0</span>
-            <span class="stat-label">Total Pages</span>
-          </article>
-          <article class="stat-card" aria-label="Top tag">
-            <span class="stat-value" id="stat-top-tag">—</span>
-            <span class="stat-label">Top Tag</span>
-          </article>
-          <article class="stat-card" aria-label="Average pages per book">
-            <span class="stat-value" id="stat-avg">0</span>
-            <span class="stat-label">Avg Pages</span>
-          </article>
-        </div>
-
-        <!-- Page cap / target -->
-        <div class="cap-container" role="region" aria-label="Reading target">
-          <div class="cap-header">
-            <h2 class="subsection-title">Reading Target</h2>
-            <span class="cap-value-display">
-              <span id="cap-current">0</span> / <span id="cap-target-display">1000</span> pages
-            </span>
+        <h1 id="about-h1" class="section-title">About the Vault</h1>
+        <div class="about-grid">
+          <div class="about-text">
+            <p class="lead">A personal library catalog &amp; notes system designed for students and avid readers — track books, annotate insights, and never lose a page reference again.</p>
+            <h2>Features</h2>
+            <ul class="feature-list">
+              <li>📖 Catalog with title, author, pages, tag, ISBN &amp; notes</li>
+              <li>🔍 Live regex-powered search with match highlighting</li>
+              <li>📊 Dashboard: stats, reading goal, 7-day trend chart</li>
+              <li>✏️ Inline table row editing</li>
+              <li>💾 Auto-save + JSON &amp; CSV import/export</li>
+              <li>🌙 Dark / light theme</li>
+              <li>♿ Full keyboard navigation &amp; ARIA live regions</li>
+              <li>📱 Mobile-first responsive design</li>
+            </ul>
+            <h2>Contact</h2>
+            <ul class="contact-list">
+              <li><a href="https://github.com/yourusername" target="_blank" rel="noopener noreferrer">GitHub Profile</a></li>
+              <li><a href="/cdn-cgi/l/email-protection#c8bbbcbdacada6bc88adb0a9a5b8a4ade6aba7a5"><span class="__cf_email__" data-cfemail="9deee9e8f9f8f3e9ddf8e5fcf0edf1f8b3fef2f0">[email&#160;protected]</span></a></li>
+            </ul>
           </div>
-          <div class="progress-bar-wrap" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" aria-label="Pages progress">
-            <div class="progress-bar-fill" id="progress-fill"></div>
+          <div class="about-decoration" aria-hidden="true">
+            <div class="book-stack">
+              <div class="book b1"></div>
+              <div class="book b2"></div>
+              <div class="book b3"></div>
+              <div class="book b4"></div>
+            </div>
           </div>
-          <p id="cap-status-msg" role="status" aria-live="polite" aria-atomic="true" class="cap-status"></p>
-        </div>
-
-        <!-- Last 7 days chart -->
-        <div class="chart-container" role="region" aria-label="Books added in last 7 days">
-          <h2 class="subsection-title">Last 7 Days</h2>
-          <div class="bar-chart" id="week-chart" aria-label="Bar chart of books added per day"></div>
-        </div>
-
-        <!-- Tag breakdown -->
-        <div class="tag-breakdown" role="region" aria-label="Books by tag">
-          <h2 class="subsection-title">By Tag</h2>
-          <div class="tag-bars" id="tag-bars"></div>
         </div>
       </div>
     </section>
 
-    <!-- ── CATALOG ──────────────────────────────── -->
-    <section id="section-catalog" class="page-section" aria-labelledby="h-catalog">
+    <!-- DASHBOARD -->
+    <section id="section-dashboard" class="page-section hidden" aria-labelledby="dash-h1">
       <div class="section-inner">
-        <h1 id="h-catalog" class="section-title">Catalog</h1>
+        <h1 id="dash-h1" class="section-title">Dashboard</h1>
 
-        <div class="catalog-controls">
-          <!-- Search -->
-          <div class="search-wrap">
-            <label for="search-input" class="sr-only">Search books by regex pattern</label>
-            <input
-              type="search"
-              id="search-input"
-              class="search-input"
-              placeholder="Search… (regex supported)"
-              autocomplete="off"
-              spellcheck="false"
-              aria-describedby="search-hint"
-            />
-            <span class="search-icon" aria-hidden="true">⌕</span>
-            <label class="toggle-label" style="margin-left:8px">
-              <input type="checkbox" id="search-case" aria-label="Case sensitive search" />
-              <span>Aa</span>
-            </label>
+        <div class="stats-grid" role="list" aria-label="Reading statistics">
+          <div class="stat-card" role="listitem">
+            <span class="stat-value" id="stat-total">0</span>
+            <span class="stat-label">Total Books</span>
           </div>
-          <p id="search-hint" class="hint-text">Enter text or a regular expression. Invalid patterns are ignored.</p>
-          <p id="search-error" class="field-error" role="alert" aria-live="assertive"></p>
-
-          <!-- Sort -->
-          <div class="sort-wrap">
-            <label for="sort-select" class="sr-only">Sort by</label>
-            <select id="sort-select" class="sort-select" aria-label="Sort records">
-              <option value="date-desc">Date ↓</option>
-              <option value="date-asc">Date ↑</option>
-              <option value="title-asc">Title A→Z</option>
-              <option value="title-desc">Title Z→A</option>
-              <option value="pages-desc">Pages ↓</option>
-              <option value="pages-asc">Pages ↑</option>
-            </select>
+          <div class="stat-card" role="listitem">
+            <span class="stat-value" id="stat-pages">0</span>
+            <span class="stat-label">Total Pages</span>
           </div>
-
-          <!-- Filter by tag -->
-          <div class="filter-wrap">
-            <label for="tag-filter" class="sr-only">Filter by tag</label>
-            <select id="tag-filter" class="sort-select" aria-label="Filter by tag">
-              <option value="">All Tags</option>
-            </select>
+          <div class="stat-card" role="listitem">
+            <span class="stat-value" id="stat-top-tag">—</span>
+            <span class="stat-label">Top Tag</span>
           </div>
-
-          <!-- Import/Export -->
-          <div class="io-wrap">
-            <button id="btn-export" class="btn btn-secondary">Export JSON</button>
-            <label class="btn btn-secondary" for="import-file">
-              Import JSON
-              <input type="file" id="import-file" accept=".json" class="sr-only" aria-label="Import JSON file" />
-            </label>
-            <button id="btn-export-csv" class="btn btn-secondary">Export CSV</button>
+          <div class="stat-card" role="listitem">
+            <span class="stat-value" id="stat-recent">0</span>
+            <span class="stat-label">This Week</span>
           </div>
         </div>
 
-        <p id="record-count" class="record-count" aria-live="polite" aria-atomic="true"></p>
+        <!-- Reading goal / cap -->
+        <div class="cap-section" aria-labelledby="cap-h2">
+          <h2 id="cap-h2">Reading Goal</h2>
+          <div class="cap-controls">
+            <label for="s-page-cap">Page goal:</label>
+            <input type="number" id="s-page-cap" min="1" max="100000" value="5000" />
+            <button id="btn-save-cap" class="btn btn-secondary">Set Goal</button>
+          </div>
+          <div class="cap-bar-container"
+               id="cap-progress"
+               role="progressbar"
+               aria-labelledby="cap-h2"
+               aria-valuenow="0"
+               aria-valuemin="0"
+               aria-valuemax="100">
+            <div class="cap-bar-fill" id="cap-bar-fill"></div>
+          </div>
+          <p id="cap-status" aria-live="polite" class="cap-status-msg"></p>
+        </div>
 
-        <!-- Table (desktop) -->
-        <div class="table-wrap" role="region" aria-label="Book catalog table" tabindex="0">
-          <table id="catalog-table" aria-describedby="record-count">
+        <!-- 7-day trend -->
+        <div class="trend-section" aria-labelledby="trend-h2">
+          <h2 id="trend-h2">Last 7 Days</h2>
+          <div class="trend-chart" id="trend-chart" role="img" aria-label="Books added in last 7 days"></div>
+          <div class="trend-labels" id="trend-labels" aria-hidden="true"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CATALOG -->
+    <section id="section-catalog" class="page-section hidden" aria-labelledby="catalog-h1">
+      <div class="section-inner">
+        <h1 id="catalog-h1" class="section-title">Book Catalog</h1>
+
+        <!-- Toolbar -->
+        <div class="toolbar" role="search" aria-label="Search and filter">
+          <div class="search-group">
+            <label for="search-input" class="sr-only">Search (regex supported)</label>
+            <input type="text" id="search-input" class="search-input field-input"
+                   placeholder="Search… or /regex/flags"
+                   aria-describedby="search-hint search-error" />
+            <span id="search-hint" class="hint-text">Supports /pattern/flags notation</span>
+            <span id="search-error" class="field-error" role="alert" aria-live="polite"></span>
+          </div>
+          <div class="filter-group">
+            <label for="search-case">
+              <input type="checkbox" id="search-case" /> Case-sensitive
+            </label>
+            <label for="tag-filter" class="sr-only">Filter by tag</label>
+            <select id="tag-filter" aria-label="Filter by tag">
+              <option value="">All tags</option>
+            </select>
+            <button id="btn-clear-search" class="btn btn-ghost btn-sm-pill" aria-label="Clear search">✕ Clear</button>
+          </div>
+          <div class="sort-group">
+            <label for="sort-select" class="sr-only">Sort</label>
+            <select id="sort-select" aria-label="Sort books">
+              <option value="dateAdded-desc">Newest first</option>
+              <option value="dateAdded-asc">Oldest first</option>
+              <option value="title-asc">Title A→Z</option>
+              <option value="title-desc">Title Z→A</option>
+              <option value="pages-asc">Pages ↑</option>
+              <option value="pages-desc">Pages ↓</option>
+            </select>
+          </div>
+          <div class="import-export-group">
+            <button id="btn-export"     class="btn btn-secondary">Export JSON</button>
+            <button id="btn-export-csv" class="btn btn-secondary">Export CSV</button>
+            <label class="btn btn-secondary" tabindex="0">
+              Import JSON
+              <input type="file" id="import-file" accept=".json" class="sr-only" aria-label="Import JSON file"/>
+            </label>
+          </div>
+        </div>
+
+        <!-- Unit converter -->
+        <div class="converter-bar">
+          <label for="convert-pages">Convert:</label>
+          <input type="number" id="convert-pages" min="0" placeholder="Pages" aria-label="Pages to convert"/>
+          <select id="convert-unit" aria-label="Convert to unit">
+            <option value="chapters">→ Est. chapters (~25 pp)</option>
+            <option value="hours">→ Est. reading hours (~30 pp/hr)</option>
+          </select>
+          <output id="convert-output" aria-live="polite"></output>
+        </div>
+
+        <p id="results-info" aria-live="polite" class="results-info"></p>
+
+        <!-- Desktop table -->
+        <div class="table-wrap" role="region" aria-label="Books table" tabindex="0">
+          <table id="books-table" aria-describedby="catalog-h1">
             <thead>
               <tr>
-                <th scope="col">Title / Author</th>
+                <th scope="col">Title / Notes</th>
+                <th scope="col">Author</th>
                 <th scope="col">Pages</th>
                 <th scope="col">Tag</th>
                 <th scope="col">Date Added</th>
                 <th scope="col">Actions</th>
               </tr>
             </thead>
-            <tbody id="catalog-tbody">
-              <!-- rows injected by JS -->
-            </tbody>
+            <tbody id="catalog-tbody"></tbody>
           </table>
         </div>
 
-        <p id="empty-state" class="empty-state" hidden>
-          No books match your search. Try a different pattern or <button class="link-btn" id="btn-clear-search">clear search</button>.
-        </p>
+        <!-- Mobile cards -->
+        <div id="cards-container" class="cards-container" aria-label="Book cards"></div>
 
-        <!-- Status announcer -->
-        <p id="action-status" role="status" aria-live="polite" aria-atomic="true" class="sr-only"></p>
-      </div>
-    </section>
-
-    <!-- ── ADD / EDIT FORM ──────────────────────── -->
-    <section id="section-add" class="page-section" aria-labelledby="h-add">
-      <div class="section-inner">
-        <h1 id="h-add" class="section-title">Add a Book</h1>
-
-        <form id="book-form" class="book-form" novalidate aria-label="Book entry form">
-          <input type="hidden" id="edit-id" />
-
-          <div class="form-row">
-            <div class="field-group">
-              <label for="f-title" class="field-label">Title <span aria-hidden="true">*</span></label>
-              <input type="text" id="f-title" class="field-input" required
-                aria-required="true"
-                aria-describedby="f-title-err"
-                autocomplete="off"
-                placeholder="The Name of the Wind" />
-              <span id="f-title-err" class="field-error" role="alert" aria-live="assertive"></span>
-            </div>
-            <div class="field-group">
-              <label for="f-author" class="field-label">Author <span aria-hidden="true">*</span></label>
-              <input type="text" id="f-author" class="field-input" required
-                aria-required="true"
-                aria-describedby="f-author-err"
-                autocomplete="off"
-                placeholder="Patrick Rothfuss" />
-              <span id="f-author-err" class="field-error" role="alert" aria-live="assertive"></span>
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="field-group">
-              <label for="f-pages" class="field-label">Pages <span aria-hidden="true">*</span></label>
-              <input type="text" id="f-pages" class="field-input" required
-                aria-required="true"
-                aria-describedby="f-pages-err"
-                inputmode="numeric"
-                placeholder="662" />
-              <span id="f-pages-err" class="field-error" role="alert" aria-live="assertive"></span>
-            </div>
-            <div class="field-group">
-              <label for="f-tag" class="field-label">Tag <span aria-hidden="true">*</span></label>
-              <input type="text" id="f-tag" class="field-input" required
-                aria-required="true"
-                aria-describedby="f-tag-err"
-                placeholder="Fantasy" />
-              <datalist id="tag-suggestions"></datalist>
-              <span id="f-tag-err" class="field-error" role="alert" aria-live="assertive"></span>
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="field-group">
-              <label for="f-date" class="field-label">Date Added <span aria-hidden="true">*</span></label>
-              <input type="text" id="f-date" class="field-input" required
-                aria-required="true"
-                aria-describedby="f-date-err f-date-hint"
-                placeholder="YYYY-MM-DD" />
-              <span id="f-date-hint" class="hint-text">Format: YYYY-MM-DD</span>
-              <span id="f-date-err" class="field-error" role="alert" aria-live="assertive"></span>
-            </div>
-            <div class="field-group">
-              <label for="f-isbn" class="field-label">ISBN (optional)</label>
-              <input type="text" id="f-isbn" class="field-input"
-                aria-describedby="f-isbn-err"
-                placeholder="978-0-06-112008-4" />
-              <span id="f-isbn-err" class="field-error" role="alert" aria-live="assertive"></span>
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="field-group field-group--full">
-              <label for="f-notes" class="field-label">Notes</label>
-              <textarea id="f-notes" class="field-input field-textarea"
-                aria-describedby="f-notes-err"
-                rows="3"
-                placeholder="Your thoughts…"></textarea>
-              <span id="f-notes-err" class="field-error" role="alert" aria-live="assertive"></span>
-            </div>
-          </div>
-
-          <div class="form-actions">
-            <button type="submit" id="btn-submit" class="btn btn-primary">Add to Vault</button>
-            <button type="button" id="btn-cancel-edit" class="btn btn-secondary" hidden>Cancel Edit</button>
-            <button type="reset" class="btn btn-ghost">Clear</button>
-          </div>
-        </form>
-
-        <p id="form-status" role="status" aria-live="polite" aria-atomic="true" class="form-status-msg"></p>
-      </div>
-    </section>
-
-    <!-- ── SETTINGS ──────────────────────────────── -->
-    <section id="section-settings" class="page-section" aria-labelledby="h-settings">
-      <div class="section-inner">
-        <h1 id="h-settings" class="section-title">Settings</h1>
-
-        <div class="settings-grid">
-          <div class="settings-card">
-            <h2 class="subsection-title">Reading Target</h2>
-            <div class="field-group">
-              <label for="s-page-cap" class="field-label">Page target (total pages goal)</label>
-              <input type="number" id="s-page-cap" class="field-input" min="1" value="1000" aria-describedby="s-page-cap-hint" />
-              <span id="s-page-cap-hint" class="hint-text">The dashboard will track progress toward this number.</span>
-            </div>
-            <button id="btn-save-cap" class="btn btn-primary">Save Target</button>
-          </div>
-
-          <div class="settings-card">
-            <h2 class="subsection-title">Page Units</h2>
-            <div class="field-group">
-              <label for="s-unit" class="field-label">Display unit</label>
-              <select id="s-unit" class="field-input" aria-describedby="s-unit-hint">
-                <option value="pages">Pages</option>
-                <option value="chapters">Chapters (÷ 20)</option>
-                <option value="percent">Percent of target</option>
-              </select>
-              <span id="s-unit-hint" class="hint-text">Changes how pages appear in stats. Chapters = pages ÷ 20.</span>
-            </div>
-            <button id="btn-save-unit" class="btn btn-primary">Save Unit</button>
-          </div>
-
-          <div class="settings-card settings-card--danger">
-            <h2 class="subsection-title">Danger Zone</h2>
-            <p>This will permanently delete all books from your vault.</p>
-            <button id="btn-clear-all" class="btn btn-danger">Clear All Data</button>
-          </div>
+        <!-- Empty state -->
+        <div id="empty-state" class="empty-state hidden" role="status">
+          <span aria-hidden="true">📭</span>
+          <p>No books found. Add your first book or adjust your search.</p>
         </div>
       </div>
     </section>
 
-    <!-- ── ABOUT ──────────────────────────────────── -->
-    <section id="section-about" class="page-section" aria-labelledby="h-about">
-      <div class="section-inner about-inner">
-        <h1 id="h-about" class="section-title">About</h1>
-        <div class="about-card">
-          <p class="about-lead">
-            <strong>Book &amp; Notes Vault</strong> is a personal reading tracker that lives entirely in your browser.
-            No accounts, no servers — your data stays with you via <code>localStorage</code>.
+    <!-- ADD / EDIT -->
+    <section id="section-add" class="page-section hidden" aria-labelledby="form-heading">
+      <div class="section-inner">
+        <h1 id="form-heading" class="section-title">Add a Book</h1>
+        <form id="book-form" class="book-form" novalidate aria-describedby="form-instructions">
+          <p id="form-instructions" class="form-instructions">
+            Fields marked <abbr title="required">*</abbr> are required.
           </p>
-          <h2 class="subsection-title">Features</h2>
-          <ul>
-            <li>Add, edit, and delete books with full metadata</li>
-            <li>Live regex-powered search with match highlighting</li>
-            <li>Sort by title, pages, or date</li>
-            <li>Dashboard with reading stats, tag breakdowns, and 7-day activity chart</li>
-            <li>JSON import/export with schema validation</li>
-            <li>Light / Dark theme toggle (persisted)</li>
-            <li>Fully keyboard-navigable; ARIA live regions for dynamic updates</li>
-          </ul>
-          <h2 class="subsection-title">Contact</h2>
-          <p>
-            Built for COMP coursework.<br />
-            GitHub: <a href="https://github.com/yourusername" class="about-link" target="_blank" rel="noopener noreferrer">github.com/yourusername</a><br />
-            Email: <a href="mailto:you@example.com" class="about-link">you@example.com</a>
-          </p>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="f-title">Title <abbr title="required">*</abbr></label>
+              <input type="text" id="f-title" class="field-input" name="title" required
+                     autocomplete="off" aria-describedby="f-title-err" aria-required="true"/>
+              <span id="f-title-err" class="field-error" role="alert" aria-live="polite"></span>
+            </div>
+            <div class="form-group">
+              <label for="f-author">Author <abbr title="required">*</abbr></label>
+              <input type="text" id="f-author" class="field-input" name="author" required
+                     autocomplete="off" aria-describedby="f-author-err" aria-required="true"/>
+              <span id="f-author-err" class="field-error" role="alert" aria-live="polite"></span>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="f-pages">Pages <abbr title="required">*</abbr></label>
+              <input type="text" id="f-pages" class="field-input" name="pages" required
+                     placeholder="e.g. 320" autocomplete="off"
+                     aria-describedby="f-pages-err f-pages-hint" aria-required="true"/>
+              <span id="f-pages-hint" class="hint-text">Whole or decimal, e.g. 320</span>
+              <span id="f-pages-err" class="field-error" role="alert" aria-live="polite"></span>
+            </div>
+            <div class="form-group">
+              <label for="f-date">Date Added <abbr title="required">*</abbr></label>
+              <input type="text" id="f-date" class="field-input" name="dateAdded" required
+                     placeholder="YYYY-MM-DD" autocomplete="off"
+                     aria-describedby="f-date-err f-date-hint" aria-required="true"/>
+              <span id="f-date-hint" class="hint-text">Format: YYYY-MM-DD</span>
+              <span id="f-date-err" class="field-error" role="alert" aria-live="polite"></span>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="f-tag">Tag <abbr title="required">*</abbr></label>
+              <input type="text" id="f-tag" class="field-input" name="tag" required
+                     placeholder="e.g. Sci-Fi" autocomplete="off"
+                     aria-describedby="f-tag-err f-tag-hint" aria-required="true"/>
+              <span id="f-tag-hint" class="hint-text">Letters, spaces, hyphens</span>
+              <span id="f-tag-err" class="field-error" role="alert" aria-live="polite"></span>
+            </div>
+            <div class="form-group">
+              <label for="f-isbn">ISBN (optional)</label>
+              <input type="text" id="f-isbn" class="field-input" name="isbn"
+                     placeholder="978-0-xxx-xxxxx-x" autocomplete="off"
+                     aria-describedby="f-isbn-err f-isbn-hint"/>
+              <span id="f-isbn-hint" class="hint-text">ISBN-10 or ISBN-13</span>
+              <span id="f-isbn-err" class="field-error" role="alert" aria-live="polite"></span>
+            </div>
+          </div>
+
+          <div class="form-group full-width">
+            <label for="f-notes">Notes</label>
+            <textarea id="f-notes" name="notes" rows="4"
+                      placeholder="Quotes, impressions, chapter notes…"
+                      aria-describedby="f-notes-err"></textarea>
+            <span id="f-notes-err" class="field-error" role="alert" aria-live="polite"></span>
+          </div>
+
+          <input type="hidden" id="edit-id" value="" />
+          <p id="form-status" class="form-status" aria-live="polite"></p>
+          <div class="form-actions">
+            <button type="submit" id="btn-submit" class="btn btn-primary">Add to Vault</button>
+            <button type="button" id="btn-cancel-edit" class="btn btn-ghost hidden">Cancel Edit</button>
+            <button type="reset"  class="btn btn-ghost">Reset</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section id="section-settings" class="page-section hidden" aria-labelledby="settings-h1">
+      <div class="section-inner">
+        <h1 id="settings-h1" class="section-title">Settings</h1>
+        <div class="settings-grid">
+
+          <div class="settings-card">
+            <h2>Units</h2>
+            <label for="s-unit">Default page display:</label>
+            <select id="s-unit" aria-label="Page unit">
+              <option value="pages">Pages</option>
+              <option value="chapters">Chapters (~25 pp)</option>
+              <option value="hours">Reading hours (~30 pp/hr)</option>
+            </select>
+            <button id="btn-save-unit" class="btn btn-primary">Save Unit</button>
+          </div>
+
+          <div class="settings-card">
+            <h2>Theme</h2>
+            <p>Toggle between light and dark mode. Your preference is saved automatically.</p>
+            <button id="theme-toggle-card" class="btn btn-secondary"
+                    onclick="document.getElementById('theme-toggle').click()">
+              Toggle Theme
+            </button>
+          </div>
+
+          <div class="settings-card danger-card">
+            <h2>Danger Zone</h2>
+            <p>Permanently erase all books from the vault.</p>
+            <button id="btn-clear-all" class="btn btn-danger" aria-describedby="clear-warn">
+              Clear All Books
+            </button>
+            <p id="clear-warn" class="hint-text">This cannot be undone.</p>
+          </div>
+
         </div>
       </div>
     </section>
 
   </main>
 
-  <!-- Confirm dialog -->
-  <div id="confirm-dialog" class="dialog-overlay" role="dialog" aria-modal="true" aria-labelledby="confirm-title" hidden>
+  <!-- ── Footer ── -->
+  <footer role="contentinfo">
+    <div class="footer-inner">
+      <p>&copy; 2025 Book &amp; Notes Vault — Vanilla HTML/CSS/JS, no frameworks.</p>
+    </div>
+  </footer>
+
+  <!-- ── Confirm Dialog ── -->
+  <div id="confirm-dialog" class="dialog-overlay hidden"
+       role="dialog" aria-modal="true"
+       aria-labelledby="dialog-title" aria-describedby="dialog-desc">
     <div class="dialog-box">
-      <h2 id="confirm-title" class="dialog-title">Confirm Delete</h2>
-      <p id="confirm-msg" class="dialog-msg">Are you sure you want to delete this record? This cannot be undone.</p>
+      <h2 id="dialog-title">Confirm Action</h2>
+      <p id="dialog-desc"></p>
       <div class="dialog-actions">
-        <button id="confirm-ok" class="btn btn-danger">Delete</button>
-        <button id="confirm-cancel" class="btn btn-secondary">Cancel</button>
+        <button id="dialog-confirm" class="btn btn-danger">Confirm</button>
+        <button id="dialog-cancel"  class="btn btn-ghost">Cancel</button>
       </div>
     </div>
   </div>
 
-  <footer class="site-footer" role="contentinfo">
-    <p>Book &amp; Notes Vault &copy; 2025 &mdash; All data stored locally in your browser.</p>
-  </footer>
-
+  <script type="module" src="scripts/seed-loader.js"></script>
   <script type="module" src="scripts/main.js"></script>
 </body>
 </html>

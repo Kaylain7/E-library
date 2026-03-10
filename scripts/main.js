@@ -3,7 +3,7 @@ import { initState, getRecords, getSettings, addRecord, updateRecord, deleteReco
          replaceAllRecords, setSearchPattern, setSortKey, setTagFilter, generateId, updateSettings } from './state.js';
 import { navigateTo, renderTable, renderCards, renderDashboard, renderTagFilter,
          showFieldError, resetForm, populateFormForEdit, renderEditRow,
-         announce, openConfirmDialog, setupDialog, applyTheme, populateSettings, refreshAll } from '/ui.js';
+         announce, openConfirmDialog, setupDialog, applyTheme, populateSettings, refreshAll } from './ui.js';
 import { validateTitle, validateAuthor, validatePages, validateDate, validateTag,
          validateISBN, warnDuplicateWords, validateAll, compileRegex, validateRegexPattern, validateImport } from './validators.js';
 
