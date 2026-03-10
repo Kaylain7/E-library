@@ -10,26 +10,28 @@ import { validateTitle, validateAuthor, validatePages, validateDate, validateTag
 const $ = id => document.getElementById(id);
 const today = () => new Date().toISOString().slice(0, 10);
 
-// ── Boot ──────────────────────────────────────────────────
-initState();
-const s = getSettings();
-applyTheme(s.theme);
-populateSettings(s);
-setupDialog();
-refreshAll();
-navigateTo('dashboard');
-bindNav();
-bindForm();
-bindCatalog();
-bindSettings();
-$('theme-toggle')?.addEventListener('click', () => {
-  const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-  applyTheme(next);
-  updateSettings({ theme: next });
+// ── Boot (DOMContentLoaded ensures all elements exist) ───
+document.addEventListener('DOMContentLoaded', () => {
+  initState();
+  const s = getSettings();
+  applyTheme(s.theme);
+  populateSettings(s);
+  setupDialog();
+  refreshAll();
+  navigateTo('dashboard');
+  bindNav();
+  bindForm();
+  bindCatalog();
+  bindSettings();
+  $('theme-toggle')?.addEventListener('click', () => {
+    const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+    updateSettings({ theme: next });
+  });
+  bindImportExport();
+  bindConverter();
+  bindHamburger();
 });
-bindImportExport();
-bindConverter();
-bindHamburger();
 
 // ── Nav ───────────────────────────────────────────────────
 function bindNav() {

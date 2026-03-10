@@ -32,114 +32,113 @@
     const results = [];
     function assert(desc, cond) { results.push({ desc, pass: !!cond }); }
 
-    /* ── Title / Author (Rule 1 + back-ref) ── */
-    assert('validateTitle: valid title passes',              validateTitle('The Great Gatsby') === null);
-    assert('validateTitle: leading space fails',             validateTitle(' Bad') !== null);
-    assert('validateTitle: trailing space fails',            validateTitle('Bad ') !== null);
-    assert('validateTitle: empty string fails',              validateTitle('') !== null);
-    assert('validateTitle: single word passes',              validateTitle('Dune') === null);
-    assert('validateTitle: dup word "the the" fails (back-ref)', validateTitle('The the Road') !== null);
-    assert('validateTitle: dup word mid-sentence fails',     validateTitle('War war and Peace') !== null);
-    assert('validateTitle: no dup word passes',              validateTitle('War and Peace') === null);
-    assert('validateAuthor: valid author passes',            validateAuthor('Frank Herbert') === null);
-    assert('validateAuthor: empty fails',                    validateAuthor('') !== null);
+    /* ── Title / Author (Rule 1 + back-reference) — indices 0–9 ── */
+    assert('validateTitle: valid title passes',                    validateTitle('The Great Gatsby') === null);
+    assert('validateTitle: leading space fails',                   validateTitle(' Bad') !== null);
+    assert('validateTitle: trailing space fails',                  validateTitle('Bad ') !== null);
+    assert('validateTitle: empty string fails',                    validateTitle('') !== null);
+    assert('validateTitle: single word passes',                    validateTitle('Dune') === null);
+    assert('validateTitle: dup word "the the" fails (back-ref)',   validateTitle('The the Road') !== null);
+    assert('validateTitle: dup word mid-sentence fails',           validateTitle('War war and Peace') !== null);
+    assert('validateTitle: no dup word passes',                    validateTitle('War and Peace') === null);
+    assert('validateAuthor: valid author passes',                  validateAuthor('Frank Herbert') === null);
+    assert('validateAuthor: empty fails',                          validateAuthor('') !== null);
 
-    /* ── Pages (Rule 2) ── */
-    assert('validatePages: integer passes',                  validatePages('320') === null);
-    assert('validatePages: 1 decimal passes',                validatePages('12.5') === null);
-    assert('validatePages: 2 decimals passes',               validatePages('0.50') === null);
-    assert('validatePages: zero passes',                     validatePages('0') === null);
-    assert('validatePages: negative fails',                  validatePages('-5') !== null);
-    assert('validatePages: leading zero "012" fails',        validatePages('012') !== null);
-    assert('validatePages: 3 decimals fails',                validatePages('1.555') !== null);
-    assert('validatePages: non-numeric fails',               validatePages('abc') !== null);
-    assert('validatePages: empty fails',                     validatePages('') !== null);
+    /* ── Pages (Rule 2) — indices 10–18 ── */
+    assert('validatePages: integer passes',                        validatePages('320') === null);
+    assert('validatePages: 1 decimal passes',                      validatePages('12.5') === null);
+    assert('validatePages: 2 decimals passes',                     validatePages('0.50') === null);
+    assert('validatePages: zero passes',                           validatePages('0') === null);
+    assert('validatePages: negative fails',                        validatePages('-5') !== null);
+    assert('validatePages: leading zero "012" fails',              validatePages('012') !== null);
+    assert('validatePages: 3 decimals fails',                      validatePages('1.555') !== null);
+    assert('validatePages: non-numeric fails',                     validatePages('abc') !== null);
+    assert('validatePages: empty fails',                           validatePages('') !== null);
 
-    /* ── Date (Rule 3) ── */
-    assert('validateDate: valid date passes',                validateDate('2025-09-25') === null);
-    assert('validateDate: month 13 fails',                   validateDate('2025-13-01') !== null);
-    assert('validateDate: day 00 fails',                     validateDate('2025-09-00') !== null);
-    assert('validateDate: wrong format fails',               validateDate('25-09-2025') !== null);
-    assert('validateDate: empty fails',                      validateDate('') !== null);
-    assert('validateDate: leap day 2024-02-29 passes',       validateDate('2024-02-29') === null);
+    /* ── Date (Rule 3) — indices 19–24 ── */
+    assert('validateDate: valid date passes',                      validateDate('2025-09-25') === null);
+    assert('validateDate: month 13 fails',                         validateDate('2025-13-01') !== null);
+    assert('validateDate: day 00 fails',                           validateDate('2025-09-00') !== null);
+    assert('validateDate: wrong format fails',                     validateDate('25-09-2025') !== null);
+    assert('validateDate: empty fails',                            validateDate('') !== null);
+    assert('validateDate: leap day 2024-02-29 passes',             validateDate('2024-02-29') === null);
 
-    /* ── Tag (Rule 4) ── */
-    assert('validateTag: single word passes',                validateTag('Fiction') === null);
-    assert('validateTag: hyphenated passes',                 validateTag('Sci-Fi') === null);
-    assert('validateTag: two words passes',                  validateTag('Non Fiction') === null);
-    assert('validateTag: starts with digit fails',           validateTag('123Fiction') !== null);
-    assert('validateTag: trailing hyphen fails',             validateTag('Fiction-') !== null);
-    assert('validateTag: empty fails',                       validateTag('') !== null);
-    assert('validateTag: special chars fail',                validateTag('Sci@Fi') !== null);
+    /* ── Tag (Rule 4) — indices 25–31 ── */
+    assert('validateTag: single word passes',                      validateTag('Fiction') === null);
+    assert('validateTag: hyphenated passes',                       validateTag('Sci-Fi') === null);
+    assert('validateTag: two words passes',                        validateTag('Non Fiction') === null);
+    assert('validateTag: starts with digit fails',                 validateTag('123Fiction') !== null);
+    assert('validateTag: trailing hyphen fails',                   validateTag('Fiction-') !== null);
+    assert('validateTag: empty fails',                             validateTag('') !== null);
+    assert('validateTag: special chars fail',                      validateTag('Sci@Fi') !== null);
 
-    /* ── ISBN (Rule 5 — lookahead) ── */
-    assert('validateISBN: empty passes (optional)',          validateISBN('') === null);
-    assert('validateISBN: valid ISBN-13 with hyphens',       validateISBN('978-0-7564-0407-9') === null);
-    assert('validateISBN: valid ISBN-10 digits only',        validateISBN('0141018097') === null);
-    assert('validateISBN: garbage fails',                    validateISBN('notanisbn') !== null);
-    assert('validateISBN: too short fails',                  validateISBN('978-0-75') !== null);
+    /* ── ISBN (Rule 5 — lookahead) — indices 32–37 ── */
+    assert('validateISBN: empty passes (optional)',                validateISBN('') === null);
+    assert('validateISBN: valid ISBN-13 with hyphens',             validateISBN('978-0-7564-0407-9') === null);
+    assert('validateISBN: valid ISBN-10 digits only',              validateISBN('0141018097') === null);
+    assert('validateISBN: garbage fails',                          validateISBN('notanisbn') !== null);
+    assert('validateISBN: too short fails',                        validateISBN('978-0-75') !== null);
+    assert('validateISBN: valid ISBN-13 plain digits',             validateISBN('9780756404079') === null);
 
-    /* ── warnDuplicateWords ── */
-    assert('warnDuplicateWords: dup word in notes warns',    warnDuplicateWords('I saw the the cat') !== null);
-    assert('warnDuplicateWords: clean text returns null',    warnDuplicateWords('Clean notes here') === null);
-    assert('warnDuplicateWords: empty returns null',         warnDuplicateWords('') === null);
+    /* ── warnDuplicateWords — indices 38–40 ── */
+    assert('warnDuplicateWords: dup word in notes warns',          warnDuplicateWords('I saw the the cat') !== null);
+    assert('warnDuplicateWords: clean text returns null',          warnDuplicateWords('Clean notes here') === null);
+    assert('warnDuplicateWords: empty returns null',               warnDuplicateWords('') === null);
 
-    /* ── validateAll ── */
+    /* ── validateAll — indices 41–42 ── */
     const valid = validateAll({ title:'Dune', author:'Herbert', pages:'688',
                                 dateAdded:'2025-09-20', tag:'Sci-Fi', isbn:'', notes:'' });
-    assert('validateAll: all valid fields → allValid true',  valid.allValid === true);
+    assert('validateAll: all valid fields → allValid true',        valid.allValid === true);
     const invalid = validateAll({ title:'', author:'Herbert', pages:'688',
                                   dateAdded:'2025-09-20', tag:'Sci-Fi', isbn:'', notes:'' });
-    assert('validateAll: empty title → allValid false',      invalid.allValid === false);
+    assert('validateAll: empty title → allValid false',            invalid.allValid === false);
 
-    /* ── validateRegexPattern ── */
-    assert('validateRegexPattern: plain text valid',         validateRegexPattern('hello').valid);
-    assert('validateRegexPattern: /valid/ is valid',         validateRegexPattern('/^hello$/').valid);
-    assert('validateRegexPattern: /[bad/ is invalid',        !validateRegexPattern('/[bad/').valid);
-    assert('validateRegexPattern: empty is valid',           validateRegexPattern('').valid);
+    /* ── validateRegexPattern — indices 43–46 ── */
+    assert('validateRegexPattern: plain text valid',               validateRegexPattern('hello').valid);
+    assert('validateRegexPattern: /valid/ is valid',               validateRegexPattern('/^hello$/').valid);
+    assert('validateRegexPattern: /[bad/ is invalid',              !validateRegexPattern('/[bad/').valid);
+    assert('validateRegexPattern: empty is valid',                 validateRegexPattern('').valid);
 
-    /* ── compileRegex ── */
+    /* ── compileRegex — indices 47–54 ── */
     const re1 = compileRegex('dune', false);
-    assert('compileRegex: plain text compiles',              re1 !== null);
-    assert('compileRegex: case-insensitive matches "Dune"',  re1?.test('Dune'));
-
+    assert('compileRegex: plain text compiles',                    re1 !== null);
+    assert('compileRegex: case-insensitive matches "Dune"',        re1?.test('Dune'));
     const re2 = compileRegex('/^The/', false);
-    assert('compileRegex: /^The/ notation compiles',         re2 !== null);
-    assert('compileRegex: /^The/ matches "The Name"',        re2?.test('The Name'));
-    assert('compileRegex: /^The/ does not match "A The"',    !re2?.test('A The'));
-
+    assert('compileRegex: /^The/ notation compiles',               re2 !== null);
+    assert('compileRegex: /^The/ matches "The Name"',              re2?.test('The Name'));
+    assert('compileRegex: /^The/ does not match "A The"',          !re2?.test('A The'));
     const re3 = compileRegex('/[unclosed/', false);
-    assert('compileRegex: invalid pattern returns null',     re3 === null);
-
+    assert('compileRegex: invalid pattern returns null',           re3 === null);
     const reNull = compileRegex('');
-    assert('compileRegex: empty returns null',               reNull === null);
+    assert('compileRegex: empty returns null',                     reNull === null);
 
-    /* ── validateImport ── */
+    /* ── validateImport — indices 55–58 ── */
     const now = new Date().toISOString();
     const good = [{ id:'book_1', title:'T', author:'A', pages:100, tag:'X',
                     dateAdded:'2025-01-01', createdAt:now, updatedAt:now }];
-    const bad  = [{ id:'book_1', title:'T' }]; // missing fields
+    const bad  = [{ id:'book_1', title:'T' }];
 
-    assert('validateImport: valid array passes',             validateImport(good).valid);
-    assert('validateImport: missing fields fails',           !validateImport(bad).valid);
-    assert('validateImport: non-array fails',                !validateImport({}).valid);
-    assert('validateImport: pages as string fails',          !validateImport([{...good[0], pages:'320'}]).valid);
+    assert('validateImport: valid array passes',                   validateImport(good).valid);
+    assert('validateImport: missing fields fails',                 !validateImport(bad).valid);
+    assert('validateImport: non-array fails',                      !validateImport({}).valid);
+    assert('validateImport: pages as string fails',                !validateImport([{...good[0], pages:'320'}]).valid);
 
-    /* ── Render ── */
+    /* ── Render results ── */
     const container = document.getElementById('results');
     let pass = 0, fail = 0;
 
+    // [name, from (inclusive), to (exclusive)] — total must equal results.length = 58
     const suites = [
-      ['Title / Author (Rule 1 + back-reference)', 0, 10],
-      ['Pages (Rule 2)', 10, 19],
-      ['Date (Rule 3)', 19, 25],
-      ['Tag (Rule 4)', 25, 32],
-      ['ISBN (Rule 5 — lookahead)', 32, 37],
-      ['warnDuplicateWords', 37, 40],
-      ['validateAll', 40, 42],
-      ['validateRegexPattern', 42, 46],
-      ['compileRegex', 46, 54],
-      ['validateImport', 54, 58],
+      ['Title / Author (Rule 1 + back-reference)',   0,  10],
+      ['Pages (Rule 2)',                             10,  19],
+      ['Date (Rule 3)',                              19,  25],
+      ['Tag (Rule 4)',                               25,  32],
+      ['ISBN (Rule 5 — lookahead)',                  32,  38],
+      ['warnDuplicateWords',                         38,  41],
+      ['validateAll',                                41,  43],
+      ['validateRegexPattern',                       43,  47],
+      ['compileRegex',                               47,  54],
+      ['validateImport',                             54,  58],
     ];
 
     suites.forEach(([name, from, to]) => {
@@ -157,7 +156,7 @@
 
     const summary = document.getElementById('summary');
     summary.textContent = `${pass + fail} tests — ${pass} passed, ${fail} failed`;
-    summary.className = fail === 0 ? 'all-pass' : 'has-fail';
+    summary.className   = fail === 0 ? 'all-pass' : 'has-fail';
   </script>
 </body>
 </html>

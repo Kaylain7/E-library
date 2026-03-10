@@ -15,7 +15,8 @@ const RE_DATE = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/;
 const RE_TAG = /^[A-Za-z]+(?:[ -][A-Za-z]+)*$/;
 
 // Rule 5 (Advanced — lookahead) — ISBN-10 or ISBN-13
-const RE_ISBN = /^(?=(?:\d[-]?){9}[\dX]$|(?:97[89])[-]?\d{10}$)[\d-]+[\dX]$/i;
+// Strip hyphens first, then lookahead: assert 10-char ISBN-10 OR 13-digit ISBN-13
+const RE_ISBN_CLEAN = /^(?=(\d{9}[\dX]|97[89]\d{10})$)[\dX]+$/i;
 
 export function validateTitle(v) {
   if (!v || !v.trim()) return 'Title is required.';
@@ -51,7 +52,8 @@ export function validateTag(v) {
 
 export function validateISBN(v) {
   if (!v || !v.trim()) return null; // optional
-  if (!RE_ISBN.test(v.trim())) return 'Must be a valid ISBN-10 or ISBN-13.';
+  const clean = v.trim().replace(/-/g, '');
+  if (!RE_ISBN_CLEAN.test(clean)) return 'Must be a valid ISBN-10 or ISBN-13.';
   return null;
 }
 

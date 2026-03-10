@@ -255,12 +255,44 @@ export function populateSettings(s) {
 
 // ── Confirm Dialog ────────────────────────────────────────
 let _resolveDialog = null;
+let _dialogBound   = false;
 
+/** Called once from main.js after DOMContentLoaded — safe no-op if called early */
 export function setupDialog() {
-  $('dialog-confirm')?.addEventListener('click', () => { _resolveDialog?.(true);  closeDialog(); });
-  $('dialog-cancel')?.addEventListener('click',  () => { _resolveDialog?.(false); closeDialog(); });
+  // Intentionally empty — listeners are wired lazily on first open
+}
+
+function _bindDialogOnce() {
+  if (_dialogBound) return;
+  _dialogBound = true;
+
+  $('dialog-confirm')?.addEventListener('click', () => {
+    const res = _resolveDialog;
+    closeDialog();
+    res?.(true);
+  });
+
+  $('dialog-cancel')?.addEventListener('click', () => {
+    const res = _resolveDialog;
+    closeDialog();
+    res?.(false);
+  });
+
+  // Click on the dark overlay (not the box) also cancels
+  $('confirm-dialog')?.addEventListener('click', e => {
+    if (e.target === $('confirm-dialog')) {
+      const res = _resolveDialog;
+      closeDialog();
+      res?.(false);
+    }
+  });
+
   $('confirm-dialog')?.addEventListener('keydown', e => {
-    if (e.key === 'Escape') { _resolveDialog?.(false); closeDialog(); }
+    if (e.key === 'Escape') {
+      const res = _resolveDialog;
+      closeDialog();
+      res?.(false);
+    }
     if (e.key === 'Tab') {
       const btns = [$('dialog-confirm'), $('dialog-cancel')].filter(Boolean);
       if (!btns.length) return;
@@ -273,6 +305,7 @@ export function setupDialog() {
 
 export function openConfirmDialog(message) {
   return new Promise(resolve => {
+    _bindDialogOnce();          // wire listeners on first call (DOM guaranteed ready)
     _resolveDialog = resolve;
     const el = $('confirm-dialog');
     if ($('dialog-desc')) $('dialog-desc').textContent = message;
